@@ -1,0 +1,45 @@
+body{
+  font-family: Tahoma;
+  color: #777; 
+  width: 100%;
+}
+
+.towers {
+  margin: 10px auto;
+  max-width: 680px;
+}
+
+.tower {
+  float: left;
+  width: 200px;
+  height: 200px;
+  background-image: url("../img/towerBg.png");
+  background-color: #ffff66;
+  margin: 10px;
+  transform: rotate(180deg);
+  border-style: dotted;
+  border-width: 3px;
+  border-color: #336600;
+}
+
+.towers:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.disk {
+  height: 20px;
+  background: #336600;
+  margin: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.h-disk {
+  height: 20px;
+  background: #ff6600;
+  margin: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}

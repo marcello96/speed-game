@@ -1,0 +1,88 @@
+{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
+    font-family: "Tahoma", Segoe, Tahoma, Geneva, sans-serif;
+}
+
+body {
+    background: #FFF;    
+}
+
+.header {
+}
+
+#stage {
+	margin-left: 6%;
+	width: 300px;
+	text-align: center;
+    white-space: nowrap;
+	margin-top: 0%;
+}
+
+#cell {
+    border: 1px solid black;
+    margin: 0;
+    padding: 0;
+    vertical-align: bottom;
+}
+
+#instructions {
+    color: #333;
+	margin-bottom: 0;
+	margin-top: -3%;
+}
+
+#instructions ul {
+	margin-bottom: -1%;
+	margin-top: -1%;
+}
+
+#buttons {
+	top: 371px;
+	margin-bottom: 2%;
+}
+
+button {
+    text-decoration: none;
+    display: inline-block;
+    padding: 24px 32px;
+    color: black;
+}
+.up {
+	margin-bottom: 3%;
+}
+
+button:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.up {
+    transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+.down {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+}
+
+
+
+@media (min-width: 48em) {
+    .header {
+        margin: 3em 2em 0 0.5em;
+        text-align: right;
+    }
+    .content {
+        padding: 2em 3em 0;
+    }
+    #instructions h2 {
+        margin-left: 0;
+    }
+}

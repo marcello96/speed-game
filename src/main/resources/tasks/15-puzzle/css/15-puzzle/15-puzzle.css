@@ -1,0 +1,94 @@
+::selection {background: transparent;}
+p{margin: 0; font: 12px/150% Arial; text-align: center; color: #888;}
+p a{color: #888;}
+
+#board{
+	position: relative;
+	left: 1px;
+	top: 20px;
+}
+
+#controls{text-align: center;}
+#controls button{
+	cursor: pointer;
+	outline: none;	
+	padding: 10px 20px;
+	margin: 25px 2px;
+	border: 0;
+	border-radius: 4px;
+	background: #001F1F;
+	font: bold 14px Arial;
+	text-align: center;
+	text-transform: uppercase;
+	text-shadow: -1px -1px 0 rgba(0,0,0, 0.5);
+	color: #fff;
+}
+#controls button:hover{background: #003333;}
+
+#puzzle{
+	position: relative;
+	width: 325px;
+	height: 325px;
+	margin: 0 auto;
+	margin-top: 10px;
+}
+#puzzle span{
+	position: absolute;
+	display: block;
+	width: 80px;
+	height: 80px;
+	border-radius: 4px;
+}
+#puzzle span.number{
+	cursor: pointer;
+	font: bold 36px/80px Arial;
+	text-align: center;
+	text-shadow: -1px -1px 0 rgba(0,0,0, 0.5);
+	color: #fff;
+}
+#puzzle span.empty{background: transparent;}
+#puzzle span.number.light{background: #226666;}
+#puzzle span.number.dark{background: #003333;}
+
+#puzzle.animate span{
+	-webkit-transition: 0.15s left, 0.15s top;
+ 	transition: 0.15s left, 0.15s top;
+}
+
+input[id^="spoiler"]{
+	display: none;
+}
+input[id^="spoiler"] + label {
+	display: block;
+	width: 200px;
+	margin: 0 auto;
+	padding: 5px 20px;
+	background: #00ee98;
+	color: #ffffff;
+	text-align: center;
+	font-size: 24px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all .6s;
+}
+input[id^="spoiler"]:checked + label {
+	color: #333;
+	background: #ccc;
+}
+input[id^="spoiler"] ~ .spoiler {
+	width: 90%;
+	height: 0;
+	overflow: hidden;
+	opacity: 0;
+	margin: 10px auto 0;
+	padding: 10px;
+	background: #eee;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	transition: all .6s;
+}
+input[id^="spoiler"]:checked + label + .spoiler{
+	height: auto;
+	opacity: 1;
+	padding: 10px;
+}

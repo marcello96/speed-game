@@ -1,0 +1,151 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    
+   <!--  <script src="lib/sudoku/lib/jquery-1.11.3.min.js"></script>
+
+    <script src="lib/sudoku/lib/bootstrap.min.js"></script>
+
+    <script src="lib/sudoku/lib/angular.min.js"></script>
+
+    <link rel="stylesheet" href="css/sudoku/css/bootstrap.min.css">
+
+    <script src="js/sudoku/js/adapter-sudoku.js"></script>
+    <script>main();</script>
+
+    <script src="js/sudoku/js/app-sudoku.js"></script>
+    <script src="js/sudoku/js/data-sudoku.js"></script>
+    <script src="js/sudoku/js/controllers-sudoku.js"></script>
+    <script src="js/sudoku/js/filters-sudoku.js"></script> -->
+    
+
+
+
+    
+    <script src="lib/jquery-1.11.3.min.js"></script>
+    <!-- <script src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+
+    <script src="lib/bootstrap.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+
+    <script src="lib/angular.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script> -->
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script src="js/adapter-sudoku.js"></script>
+    <script>main();</script>
+
+    <script src="js/app-sudoku.js"></script>
+    <script src="js/data-sudoku.js"></script>
+    <script src="js/controllers-sudoku.js"></script>
+    <script src="js/filters-sudoku.js"></script>
+    
+    <style type="text/css">
+        .margin_left_60 {
+            margin-left: 20px !important;
+        }
+
+        .margin_bottom_60 {
+            margin-bottom: 30px !important;
+        }
+
+        input.valide {
+            color: yellow !important;
+        }
+        button {
+          margin: .5px;
+        }
+
+        button:disabled,
+        button[disabled]{
+          border: 1px solid #999999;
+          background-color: pink;
+          color: black;
+        }
+
+        input.error {
+            color: red !important;
+        }
+
+        input.correct {
+            color: black !important;
+            cursor: not-allowed !important;
+            background: white !important;
+        }
+
+        #wrapper {
+            margin-top: 20px;
+            margin-left: 0 auto;
+            margin-right: 0 auto;
+        }
+
+        .row{
+            margin-bottom: 10px;
+        }
+
+        #manual {
+            font-size: 12px;
+            width: 90%;
+            margin-top: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        #possibilitiesRow{
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input[type="text"]
+        {
+            font-size: 15px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+
+
+<div id="manual"  style="text-align: left; background-color:lavenderblush;">
+       Twoim zadaniem jest wypełnienie sudoku, tak by w żadnym rzędzie, kolumnie czy kwadracie 3x3 nie było powtórzeń liczb. Sudoku wypełniach poprzez kliknięcie w jedno z dozwolonych pól i wybranie jednej z pojawiających się możliwości. Możesz też wykasować wprowadzoną liczbę klikając "x" przy możliwościach. Po poprawnym rozwiązaniu przyznany zostaje Ci 1 punkt. W każdej chwili możesz zrezygnować klikając w przycisk u dołu strony. Wiąże się to z niewykonaniem zadania i przyznaniem za niego 0 punktów. <br/> 
+</div>
+
+<div id="wrapper" align="left" class="container" ng-app="Sudoku">
+
+    <div id="GameArea" class="content" ng-controller="SudokuController" >
+        <div id="possibilitiesRow" align="left" style="margin-bottom: 30px;">
+            
+            
+            <br/>Wybierz jedną z możliwości poniżej:<br/>
+            <button disabled style="text-align: left; height:35px; border: 1px solid #000000; {[{currentPossibilities | if_poss_eq0}]}" type="button" class="btn btn-default">Nie ma żadnych możliwości</button>   
+
+            <button type="button" style="height:35px; width:30px;" class="btn btn-default" ng-repeat="possibility in currentPossibilities" ng-click="onPossibilityClicked(possibility)">
+                {[{possibility}]}
+            </button>
+            <button name="deleteNumberBtn" ng-click="deleteNumberAtSelectedField()" class="btn {[{ disableIfNothingSelected() }]}">x</button>
+        </div>
+
+        <table>
+            <tr ng-repeat="row in rows" >
+              <td ng-repeat="column in row.columns"  style="{[{ column.id | column_modulo_3_style}]} {[{ row.id | row_modulo_3_style}]}">
+                    <button type="button" class="btn {[{ column.class }]} {[{check(row.id, column.id)}]} "
+                           name="cell-{[{row.id}]}{[{column.id}]}"
+                           value="column.value" ng-model="column.value"
+                           ng-disabled="{[{column.class | if_correct_disable}]}"
+                           style="height:35px; width:35px"
+                           ng-click="possibilities(row.id, column.id)"> {[{ column.value }]} </button>
+
+              </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

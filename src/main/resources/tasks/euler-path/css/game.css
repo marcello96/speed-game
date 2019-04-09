@@ -1,0 +1,181 @@
+body{
+	font-family: Tahoma;
+	font-size: 24px;
+}
+
+.instruction{
+	margin: 0 auto;
+	text-align: center;
+	background: url('../img/green.jpg');
+	width: 1024px;
+	height: 720px;
+	border: 2px solid;	
+}
+div,h2{
+	font-family: verdana, helvetica, arial, sans-serif;
+	font-size: 19px;
+}
+.notify{
+	text-align: center;
+	display: none;
+	padding-top: 34%;
+	position: relative;
+}
+#changeLevel{
+	background-color:#18ab29;
+	border-radius:28px;
+	border:1px solid #44c767;
+	color:#ffffff;
+	font-family:arial;
+	font-size:20px;
+	height: 50px;
+	width: 150px;
+}
+#levelNumber{
+	position: absolute;
+	color: #0B0B61;
+	font-family:arial;
+	font-size:25px;
+}
+.myButton:hover {
+background-color:#5cbf2a;
+}
+#finish{
+	color: black;
+}
+line{
+	stroke: #404040;
+	stroke-width:30;
+}
+.visited{
+	stroke: rgb(0,200,0);
+}
+#error{
+	position: relative;
+	display: none;
+	margin-left: 65%;
+	color: red;
+	height: 380px;
+	width: 300px;
+	background-repeat: no-repeat;
+	background: url('../img/monkey.png');
+}
+
+#errorMsg {
+	position: relative;
+	top: 70%;
+	max-width: 70%;
+	margin: 0 auto;
+}
+
+#main{
+	background-color: #fafae4;
+	margin: 0 auto;
+	width: 800px;
+	border: 2px solid;
+	text-align: center;
+}
+
+#container{
+	margin: 30px auto;
+}
+
+.myButton {
+	background-color:#18ab29;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #44c767;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Tahoma;
+	font-size:30px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+}
+
+.myButton:hover {
+	background-color:#5cbf2a;
+}
+
+.playGame {
+	position: relative;
+	top: 60%;
+	left: 35%;
+	background-color:#5cbf2a;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #44c767;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:25px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+	height: 10%;
+	width: 25%;
+}
+
+#movesFinished{
+	position: relative;
+	padding-top: 2%;
+	top: 50%;
+	opacity: 0.9;
+	background-color: #D3F5EA;
+	height: 30%;
+	margin: 0 auto;
+	text-align: center;
+	z-index: 999;
+	display: none;
+}
+
+#progress{
+	width: 3%;
+	height: 100%;
+	background-color: transparent;
+	float: right;
+	text-align: center;
+}
+
+#progress span{
+	width: 100%;
+	display: block;
+	vertical-align: middle;
+	color: white;
+	border: 1px solid black;
+}
+
+#progress span.complete{
+	background-color: green;
+}
+
+#movesFinished .myButton{
+	position: relative;
+}
+
+#movesFinished .resetLevel{
+	top: 15%;
+}
+
+@media (max-width: 1440px) {
+	#container{
+		/* margin-left: 24%; */
+	}		
+	#error {
+		margin-left: 65%;
+	}
+}
+
+@media (max-width: 1280px) {
+	#container{
+		/* margin-left: 28%; */
+	}
+	#error {
+		margin-left: 65%;
+	}		
+}

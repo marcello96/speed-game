@@ -1,0 +1,145 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jigsaw</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./css/pure-min.css">
+    <link rel="stylesheet" href="./css/grids-responsive-min.css">
+    <!--[if lt IE 9]><script src="./js/respond.min.js"></script><![endif]-->
+    <style>
+        body { margin: 0; padding: 0; border: 0; min-width: 320px; color: #777; }
+        html, button, input, select, textarea, .pure-g [class *= "pure-u"] { font-family: Tahoma; font-size: 1.02em; }
+        p { line-height: 1.5; }
+        ul { padding: 0 0 0 20px; }
+
+        @media (max-width:480px) {
+            h1 { font-size: 3em; }
+            h2 { font-size: 1.8em; }
+            h3 { font-size: 1.5em; }
+            td:first-child { white-space: normal; }
+        }
+
+        .inline-code { padding: 1px 5px; background: #eee; border-radius: 2px; }
+        pre { padding: 15px 10px; font-size: .9em; color: #555; background: #edf3f8; }
+        pre i { color: #aaa; } /* comments */
+        pre b { font-weight: normal; color: #cf4b25; } /* strings */
+        pre em { color: #0c59e9; } /* numeric */
+
+        /* Pure CSS */
+        .pure-button { margin: 5px 0; text-decoration: none !important; }
+        .button-lg { margin: 5px 0; padding: .65em 1.6em; font-size: 105%; }
+
+        /* required snapPuzzle styles */
+        .snappuzzle-wrap { position: relative; display: block; }
+        .snappuzzle-pile { position: relative; }
+        .snappuzzle-piece { cursor: move; }
+        .snappuzzle-slot { position: absolute; background: #fff; opacity: .8; }
+        .snappuzzle-slot-hover { background: #eee; }
+    </style>
+
+    <script>
+
+        var xhr = new XMLHttpRequest();
+         var vNick = '';
+        var vAge = -1;
+        var vGroup = ''
+        xhr.open('GET', '/jigsaw/config', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                var json = xhr.responseText;
+                obj = JSON.parse(json);
+                vNick = obj['nick']
+                vAge = obj['age']
+                vGroup = obj['group']
+            }
+        }
+        xhr.send(null);
+
+        function endFun() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/jigsaw/end', true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify({result: 1, group: vGroup, nick: vNick, age: vAge}));
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    //window.alert(xhr.responseText);
+                    window.location.replace(xhr.responseText);
+                }
+            }
+        }
+        <!--setTimeout(function(){-->
+            <!--myFunction();-->
+        <!--}, 1000);-->
+    </script>
+</head>
+<body>
+    <div style="padding:0 10px;margin:20px auto;text-align:center;">
+        <h2>snapPuzzle</h2>
+        <h5> Ułoż układankę! Dopasuj części do fragmentów rozjaśnionego obrazka.</h5>
+    </div>
+    <div id="puzzle-containment" style="border-top: 1px solid #eee;border-bottom:1px solid #eee;background:#fafafa;margin:30px 0;padding:10px;text-align:center">
+        <div class="pure-g" style="max-width:1280px;margin:auto">
+            <div class="pure-u-1 pure-u-md-1-2"><div style="margin:10px">
+                <img id="source_image" class="pure-img" src="">
+            </div></div>
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div id="pile" style="margin:10px">
+                    <div id="puzzle_solved" style="display:none;text-align:center;position:relative;top:25%">
+                        <h2 style="margin:0 0 20px">Well done!</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var imgNr = Math.floor(Math.random() * 10);
+        document.getElementById('source_image').src = ("./img/img" + imgNr + ".jpg");
+    </script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/jquery-ui.min.js"></script>
+    <script src="./js/jquery.snap-puzzle.js"></script>
+    <script>
+        // jQuery UI Touch Punch 0.2.3 - must load after jQuery UI
+        // enables touch support for jQuery UI
+        !function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.unbind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
+
+        function start_puzzle(x, y){
+            $('#puzzle_solved').hide();
+            $('#source_image').snapPuzzle({
+                rows: x, columns: x,
+                pile: '#pile',
+                containment: '#puzzle-containment',
+                onComplete: function(){
+                    $('#source_image').fadeOut(150).fadeIn();
+                    $('#puzzle_solved').show();
+                    endFun();
+                }
+            });
+        }
+
+        $(function(){
+            while(vAge == -1) {}
+                if (vAge <= 5) {x = 3; y = 2;}
+                else if (vAge <= 9) {x = 3; y = 3;}
+                else if (vAge <= 13) {x = 4; y  = 3;}
+                else if (vAge <= 17) {x = 4; y = 4;}
+                else {x = 5; y = 4;}
+                //console.log("x = " + x + ": y = " + y);
+            $('#pile').height($('#source_image').height());
+            start_puzzle(x, y);
+
+            /*$('.restart-puzzle').click(function(){
+                $('#source_image').snapPuzzle('destroy');
+                start_puzzle($(this).data('grid'));
+            });*/
+
+            $(window).resize(function(){
+                $('#pile').height($('#source_image').height());
+                $('#source_image').snapPuzzle('refresh');
+            });
+        });
+        
+    </script>
+</body>
+</html>

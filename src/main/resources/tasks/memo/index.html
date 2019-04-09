@@ -1,0 +1,96 @@
+<!doctype html>
+<html ng-app="memoryGameApp">
+<head>
+  <meta charset="utf-8">
+  <title>Memory Game</title>
+<!--   <link rel="stylesheet" href="css/memo/css/app.css">
+  <script src="lib/memo/lib/angular.js"></script>
+  <script src="lib/memo/lib/jquery-1.11.3.min.js"></script>
+
+  <script type="text/javascript" src="js/memo/js/adapter-memo.js"></script>
+  <script>main();</script>
+
+  <script src="js/memo/js/app-memo.js"></script>
+  <script src="js/memo/js/game-memo.js"></script> -->
+
+
+  <link rel="stylesheet" href="css/app.css">
+  <script src="lib/angular.js"></script>
+    <script src="lib/jquery-1.11.3.min.js"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script> -->
+  <!-- <script src="http://code.jquery.com/jquery-latest.min.js"></script>  -->
+  <!-- <link rel="stylesheet" href="css/memo/css/bootstrap.min.css">     -->
+
+  <script type="text/javascript" src="js/adapter-memo.js"></script>
+  <script>main();</script>
+
+  <script src="js/app-memo.js"></script>
+  <script src="js/game-memo.js"></script>
+  <style type="text/css">
+      button {
+        color: black;
+        width: 150px;
+        border: 1px solid #0066cc;
+        border-radius: 12px;
+        background-color: #ffffff;
+        padding: 5px 10px;
+      }
+      button:hover {
+        color: black;
+        width: 150px;
+        border: 1px solid #0099cc;
+        border-radius: 12px;
+        background-color: rgb(221, 221, 221);
+        padding: 5px 10px;
+      }
+
+      #manual {
+        font-size: 12px;
+        width: 90%;
+        margin-top: 30px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+
+      #pairsInfoDiv{
+        font-size: 12px;
+      }
+
+      #matchingInfoDiv{
+        font-size: 12px;
+      }
+
+    </style>
+</head>
+<body ng-controller="GameCtrl">
+
+  <div id="manual"  style="text-align: left; background-color:lavenderblush;">
+      Masz kilkanaście sekund na zapamiętanie jak największej ilości kart. Po tym czasie karty obracają się zakrywając swoje symbole. Twoim zadaniem jest odkryć wszystkie pary w talii. Po ich odkryciu przyznany zostaje Ci 1 punkt. W każdej chwili możesz zrezygnować klikając w przycisk u dołu strony. Wiąże się to z niewykonaniem zadania i przyznaniem za niego 0 punktów. <br/> 
+  </div>
+
+  <br/>
+  <div id="pairsInfoDiv">Par do odkrycia: {{game.unmatchedPairs}}</div>
+  <div id="matchingInfoDiv">Teraz dopasowujesz: {{game.firstPick.title}}</div>
+
+  <table>
+    <tr ng-repeat="row in game.grid">
+      <td ng-repeat="tile in row" ng-click="game.flipTile(tile)">
+
+        <!-- this entire block can be replaced with our custom component mgCard:
+          <mg-card tile="tile"></mg-card>
+        -->
+        <div class="container">
+          <div class="card" ng-class="{flipped: tile.flipped}"  >
+              <img class="front" >
+              <img class="back" ng-src="img/{{tile.title}}.png">
+          </div>
+        </div>
+
+      </td>
+    </tr>
+  </table>
+
+  <div class="message">{{game.message}}</div>
+</body>
+</html>

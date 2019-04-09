@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Towers of Hanoi</title>
+        <script>
+
+        var xhr = new XMLHttpRequest();
+         var vNick = '';
+        var vAge = -1;
+        var vGroup = ''
+        var nrOfDisks = 6;
+        xhr.open('GET', '/hanoi/config', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                var json = xhr.responseText;
+                obj = JSON.parse(json);
+                vNick = obj['nick']
+                vAge = obj['age']
+                vGroup = obj['group']
+            }
+        }
+        xhr.send(null);
+
+        function endFun(points) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/hanoi/end', true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify({result: points, group: vGroup, nick: vNick, age: vAge}));
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    //window.alert(xhr.responseText);
+                    window.location.replace(xhr.responseText);
+                }
+            }
+        }
+        <!--setTimeout(function(){-->
+            <!--myFunction();-->
+        <!--}, 1000);-->
+    </script>
+    
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+  </head>
+  <body>
+    <script src="./js/jquery.js"></script>
+    <script src="./js/jquery-ui.js"></script>
+    <script src="./js/jquery-ui.min.js"></script>
+    <script src="./js/jquery-2.1.1.js"></script>
+    <script src="./js/hanoi-core.js"></script>
+    <script src="./js/hanoi-view.js"></script>
+
+    <div style="max-width: 900px; padding:0 10px;margin:20px auto;text-align:center;">
+        <h2>Wieże Hanoi</h2>
+        <h5>Na pierwszym słupku masz stos dysków. Przenieś je wszystkie na ostatni słupek! Aby przenieść krążek, kliknij na niego, a następnie kliknij słupek, na który chcesz go przenieść. 
+        <br /> Pamiętaj, by przenosić tylko dyski leżące na wierzchu stosów i mniejsze dyski zawsze były umieszczane na większych.</h5>
+    </div>
+    <div class="towers">
+    </div>
+    <script>
+        while (vAge == -1){}
+        
+                if (vAge <= 5) nrOfDisks = 2
+                else if (vAge <= 10) nrOfDisks = 3
+                else if (vAge <= 15) nrOfDisks = 4
+                else if (vAge <= 19) nrOfDisks = 5
+      var game = new Hanoi.Game(nrOfDisks);
+      var $gameDiv = $('.towers');
+      new Hanoi.View(game, $gameDiv, nrOfDisks, endFun);
+    </script>
+  </body>
+</html>

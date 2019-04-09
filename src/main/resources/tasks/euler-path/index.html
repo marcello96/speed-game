@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ścieżka Eulera</title>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/shapes.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/game.css">
+</head>
+<body>
+    <script>
+        var xhr = new XMLHttpRequest();
+        var config = {age: 14};
+        xhr.open('GET', '/euler-path/config', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                var json = xhr.responseText;
+                config = JSON.parse(json);
+            }
+        };
+        xhr.send(null);
+
+        function sendResult(score) {
+            console.log("send result " + score);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/euler-path/end', true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            //send result to server
+            xhr.send(JSON.stringify({result: score, group: config.group, nick: config.nick, age: config.age}));
+            xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                window.location.replace(xhr.responseText);
+            }
+            }
+        }
+    </script>
+    <p style="margin: auto; text-align: center; padding: 30px">Wybierz punkt początkowy, a następnie kolejne węzły, tak aby pokryć cały graf. Każdą krawędź można wybrać tylko raz.</p>
+    <div id="main">
+        <div id="movesFinished">
+            <h2>Brak ruchów!</h2>
+            <button class="myButton resetLevel" >Restart</button>
+        </div>
+        <div id="level" class="notify">
+            <h2>Gratulacje! Zadanie ukończone.</h2>
+            <button id="changeLevel" onclick="sendResult(1)">Następne zadanie</button>
+        </div>        
+        <div id="finish" class="notify">
+            <h1>Congratulations! You Win.</h1>
+        </div>        
+        <div id="container"></div> 
+        <div style="margin: 30px auto;">
+            <button class="myButton resetLevel">Restart</button>    
+        </div>          
+        <div id="error">
+            <div id="errorMsg">
+                <h2></h2>
+            </div>
+        </div>     
+    </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>InFUN</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/input_view.css"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <div class="container data thumbnail">
+
+        <div class="alert alert-success" style="text-align: center;">
+            <strong>SUKCES</strong>
+        </div>
+
+        <div style="white-space: pre-line">
+            <label for="comment">Wynik:</label>
+
+            <textarea rows="5" disabled="true" class="form-control" id="comment" th:text="${result}">
+            </textarea>
+        </div>
+
+        <form action="/joinGame" th:align="center">
+            <input class="btn btn-primary" type="submit" value="Dołącz do innej gry"/>
+        </form>
+
+    </div>
+
+</body>
+</html>

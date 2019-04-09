@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/minesweeper.css" type="text/css"/>
+    </head>
+    <body>
+		<script type="text/javascript" src="js/adapter-minesweeper.js"></script>
+		<script>main();</script>
+        <script type="text/javascript" src="js/game-minesweeper.js"></script>
+        <div class="pure-g">
+            <div id="instructions" class="content pure-u-1">
+                <h4>Saper - zasady rozgrywki</h4>
+                <ul>
+                    <li>Dotknij komórkę aby ją odkryć, jeśli jest to mina, <strong>przegrywasz</strong></li>
+                    <li>Odkryte komórki bez min informują o ilości min znajdujących się obok nich</li>
+					<li>Dotknij i przytrzymaj aby oflagować komórkę</li>
+                </ul>
+                <h4>Pozostałe miny:
+					<span id="remaining"></span>
+                </h4>
+            </div>
+            <div id="grid" class="content"></div>
+        </div>
+    </body>
+</html>

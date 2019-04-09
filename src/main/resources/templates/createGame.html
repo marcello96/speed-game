@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>InFUN</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/input_view.css"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <style>
+         body {
+            font-family: Tahoma;
+         }
+
+
+    </style>
+</head>
+<body>
+<div class="container data thumbnail">
+    <div style="text-align: center;">
+        <h1>Stwórz grę</h1>
+        <hr/>
+        <h2>Wprowadź dane niezbędne do stworzenia nowej gry:</h2>
+    </div>
+
+    <form class="" action="#" th:action="@{/manage}" th:object="${createGameInput}" method="post">
+
+        <div class="form-group row">
+            <label for="inputGroupId" class="col-sm-2 col-form-label">ID grupy</label>
+            <div class="col-sm-10">
+                <input type="text" th:field="*{groupId}" class="form-control" id="inputGroupId"
+                       placeholder="ID grupy (jeśli puste, zostanie wylosowane)"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="taskNumber" class="col-sm-2 col-form-label">Ilość zadań</label>
+            <div class="col-sm-10">
+                <input type="number" th:field="*{taskNumber}" th:value=10 th:min=1 th:max=100 class="form-control"
+                       id="taskNumber"
+                       placeholder="Ilość zadań"/>
+            </div>
+        </div>
+
+        <center>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <ul class="list-group">
+                        <li class="list-group-item" th:each="task, stat : *{tasksConfig}">
+                            <input class="form-check-input" th:field="*{tasksConfig}" type="checkbox"
+                                   th:value="${task.name}"
+                                   th:text=" | &nbsp; ${task.name}"/>
+                            <ul class="list-group" th:object="${task}">
+                                <li class="list-group-item" th:each="paramConfig, stat : *{config}">
+                                    <div>
+                                        <label for="value" class="col-sm-2 col-form-label"
+                                               th:text="${paramConfig.name}"></label>
+                                        <input type="text" class="form-control" id="value"
+                                               th:value="${paramConfig.value}" readonly/>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </label>
+            </div>
+        </center>
+
+        <div class="buttons">
+            <input class="btn btn-primary" type="submit" value="Zatwierdź"/>
+            <input class="btn btn-primary" type="reset" value="Zresetuj"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>

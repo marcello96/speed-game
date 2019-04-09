@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>InFUN</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/input_view.css"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script>
+        var xhr = new XMLHttpRequest();
+        var score = 0.0;
+        var lastResult = 0.0;
+        xhr.open('GET', '/last/results', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                var json = xhr.responseText;
+                obj = JSON.parse(json);
+                score = obj['score']
+                lastResult = obj['lastResult']
+                document.getElementById("comment").value = 'Ostatni wynik = ' + lastResult + '\nCałkowity wynik = ' + score;
+            }
+        }
+        xhr.send(null);
+    </script>
+</head>
+<body>
+
+<div class="container data thumbnail">
+
+    <div class="alert alert-success" style="text-align: center;">
+        <strong>SUKCES</strong>
+    </div>
+
+    <div style="white-space: pre-line">
+        <label for="comment">Wynik:</label>
+
+        <textarea rows="5" disabled="true" class="form-control" id="comment" th:text="${result}">
+            </textarea>
+    </div>
+
+    <form action="/newtask" th:align="center">
+        <input class="btn btn-primary" type="submit" value="Zacznij nowe zadanie"/>
+    </form>
+
+</div>
+
+</body>
+</html>

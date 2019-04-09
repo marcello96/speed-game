@@ -1,0 +1,20 @@
+{
+	"name": "quiz",
+	"config": [
+		{
+			"name": "numberOfQuestions",
+			"value": 4,
+			"required": true
+		},
+		{
+			"name": "timeForQuestion",
+			"value": 10,
+			"required": true
+		},
+		{
+			"name": "fileName",
+			"value": "questions",
+			"required": true
+		}
+	]
+}

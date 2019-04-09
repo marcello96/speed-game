@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>InFUN</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/input_view.css"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/canvasjs.min.js"></script>
+
+    <script>
+        var chart;
+        function getResults(groupId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/' + groupId + '/results', false);
+            xhr.send(null);
+            <!--window.alert(xhr.responseText);-->
+            var input = JSON.parse(xhr.responseText)
+            var array = [];
+            for (var name in input) {
+                item = {};
+                item.label = name;
+                item.y = input[name];
+                array.push(item);
+            }
+            <!--window.alert(array);-->
+            return array;
+        }
+        function getData() {
+            var groupId = document.getElementById("groupID").innerHTML;
+            return getResults(groupId);
+        }
+        function createChart() {
+            CanvasJS.addColorSet("greenShades",
+                [//colorSet Array
+
+                "#2F4F4F",
+                "#008080",
+                "#2E8B57",
+                "#3CB371",
+                "#90EE90"
+                ]);
+
+            chart = new CanvasJS.Chart("chartContainer", {
+
+                colorSet: "greenShades",
+
+                animationEnabled: true,
+
+                axisX:{
+                    labelFontSize: 30,
+                    interval: 1
+                },
+                axisY2:{
+                    interlacedColor: "rgba(1,77,101,.2)",
+                    gridColor: "rgba(1,77,101,.1)"
+                },
+                data: [{
+                    type: "bar",
+                    name: "users",
+                    axisYType: "secondary",
+                    dataPoints: getData()
+                }]
+
+            });
+            return chart;
+        }
+        window.setInterval(function(){
+            chart.options.data[0].dataPoints = getData();
+            chart.render();
+        }, 1000);
+        window.onload = function() {
+            createChart().render();
+        };
+
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/joinGame">InFun</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a th:text="${group_id}"></a></li>
+                <li><a href="/createGame">Stwórz nową grę</a></li>
+                <li><a id="link" href="/remove">Usuń obecną grę</a></li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<div class="chart" id="chartContainer" style="width: 100%; height: 88vh"></div>
+
+
+<p th:text="${group_id}" id="groupID" style="visibility:hidden"/>
+
+<script>
+        document.getElementById("link").href = document.getElementById("groupID").innerHTML + "/remove";
+</script>
+</body>
+</html>

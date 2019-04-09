@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>InFUN</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/input_view.css"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container data thumbnail">
+    <div style="text-align: center;">
+        <h1>Dołącz do gry</h1>
+        <hr/>
+        <h2>Wprowadź niezbędne dane, aby dołączyć do gry:</h2>
+    </div>
+
+    <form class="" action="#" th:action="@{/joinGame}" th:object="${joinGameInput}" method="post">
+
+        <div class="form-group row">
+            <label for="inputGroupId" class="col-sm-2 col-form-label">ID grupy</label>
+            <div class="col-sm-10">
+                <input th:type="text" th:field="*{groupId}" th:minlength="3" class="form-control" id="inputGroupId"
+                       placeholder="ID grupy"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="inputNick" class="col-sm-2 col-form-label">Przydomek</label>
+            <div class="col-sm-10">
+                <input th:type="text" th:field="*{nick}" th:minlength="3" th:maxlength="10" class="form-control" id="inputNick"
+                       placeholder="Przydomek"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputAge" class="col-sm-2 col-form-label">Wiek</label>
+            <div class="col-sm-10">
+                <input type="number" th:field="*{age}" th:min=3 th:max=100 class="form-control" id="inputAge"
+                       placeholder="Wiek"/>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <input class="btn btn-primary" type="submit" value="Zatwierdź"/>
+            <input class="btn btn-primary" type="reset" value="Zresetuj"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>

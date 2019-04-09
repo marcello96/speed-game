@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Lines</title>
+	<meta name="viewport" content="width=device-width; initial-scale=1.0;">
+	<link rel="stylesheet" href="css/color-lines/style.css">
+</head>
+<body>
+    <input type="checkbox"  id="spoiler2" />
+    <label for="spoiler2" >Instrukcja</label>
+    <div class="spoiler">
+        1. Układaj poziome/pionowe/diagonalne linie z kulek tego samego koloru
+        <br/>
+        2. Gdy linia będzie dostatecznie długa zniknie, a ty otrzymasz punkty
+        <br/>
+        3. Po każdym ruchu na planszy pojawią się nowe kulki w losowych miejscach
+        <br/>
+        4. Gra zakończy się po zdobyciu wymaganej ilości punktów bądź wypełnienie całej planszy
+    </div>
+	<div id="game">
+		<div class="board" style="text-align:center">
+			<br>
+			Score: <strong class="score">0</strong> /
+			Record: <strong class="record">0</strong>
+		</div>
+		<div class="forecast"></div>
+		<div class="grid"></div>
+	</div>
+
+	<script src="js/color-lines/connector-color-lines.js"></script>
+	<script src="js/color-lines/lines.js"></script>
+	<script>
+		//main();
+		Lines.init();
+	</script>
+
+</body>
+</html>
