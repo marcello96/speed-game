@@ -7,4 +7,5 @@ import java.util.List;
 @Service
 public interface IFolderScanService {
     List<String> scanFolder();
+    List<String> getTaskNames();
 }

@@ -41,6 +41,8 @@
     </div>
 
     <form action="/newtask" th:align="center">
+        <input type="hidden" name="mark" value="5" />
+        <input type="hidden" name="prevTaskName" th:value="${taskName}" />
         <input class="btn btn-primary" type="submit" value="Zacznij nowe zadanie"/>
     </form>
 

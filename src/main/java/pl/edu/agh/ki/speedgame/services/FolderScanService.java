@@ -46,4 +46,18 @@ public class FolderScanService implements IFolderScanService {
         return result;
     }
 
+    @Override
+    public List<String> getTaskNames() {
+        List<String> taskNames = new ArrayList<>();
+        try {
+            if (ResourceUtils.getFile("classpath:tasks").isDirectory() && ResourceUtils.getFile("classpath:tasks").listFiles() != null)
+                for (File file : ResourceUtils.getFile("classpath:tasks").listFiles()) {
+                    taskNames.add(file.getName());
+                }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return taskNames;
+    }
 }

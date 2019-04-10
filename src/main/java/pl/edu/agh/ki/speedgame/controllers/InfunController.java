@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.edu.agh.ki.speedgame.exceptions.CannotRemoveGameException;
 import pl.edu.agh.ki.speedgame.exceptions.GameWithSuchIdExistException;
@@ -27,6 +28,7 @@ import pl.edu.agh.ki.speedgame.model.requests.JoinGameInput;
 import pl.edu.agh.ki.speedgame.model.requests.LastResultResponse;
 import pl.edu.agh.ki.speedgame.services.IFolderScanService;
 import pl.edu.agh.ki.speedgame.services.IGameService;
+import pl.edu.agh.ki.speedgame.services.MarkService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,9 @@ public class InfunController {
 
     @Autowired
     IFolderScanService folderScanService;
+
+    @Autowired
+    MarkService markService;
 
     @RequestMapping("/")
     String main() {
@@ -71,8 +76,9 @@ public class InfunController {
         return "redirect:/newtask";
     }
 
-    @RequestMapping(value = "/newtask", method = RequestMethod.GET)
-    String getNewTask(@CookieValue("JSESSIONID") String cookie, Model model) {
+    @RequestMapping(value = "/newtask", method = RequestMethod.POST)
+    String getNewTask(@CookieValue("JSESSIONID") String cookie, @RequestParam String prevTaskName, @RequestParam int mark, Model model) {
+        markService.addMark(prevTaskName, mark);
         return "redirect:/tasks/new";
     }
 
@@ -120,6 +126,7 @@ public class InfunController {
 //        System.out.println("/{task_name}/end -> result " + taskResult + " cookie = " + cookie);
         gameService.addResult(taskName, cookie, taskResult.getNick(), taskResult.getGroup(), taskResult.getResult());
         model.addAttribute("result", taskResult);
+        model.addAttribute("taskName", taskName);
         return "/taskResult";
     }
 

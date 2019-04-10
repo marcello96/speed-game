@@ -20,8 +20,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .and()
+                .authorizeRequests().antMatchers("/").permitAll().and()
+                .authorizeRequests().antMatchers("/console/**").permitAll()
                 .and().csrf().disable()
-                .headers().cacheControl().disable();
+                .headers()
+                    .cacheControl().disable()
+                    .frameOptions().disable();
     }
 
     @Bean

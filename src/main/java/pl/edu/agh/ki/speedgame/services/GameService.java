@@ -5,6 +5,7 @@ import org.apache.commons.text.CharacterPredicates;
 import org.apache.commons.text.RandomStringGenerator;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.agh.ki.speedgame.exceptions.CannotRemoveGameException;
 import pl.edu.agh.ki.speedgame.exceptions.GameWithSuchIdExistException;
@@ -16,15 +17,27 @@ import pl.edu.agh.ki.speedgame.exceptions.SuchUserExistException;
 import pl.edu.agh.ki.speedgame.exceptions.WrongTaskException;
 import pl.edu.agh.ki.speedgame.model.Game;
 import pl.edu.agh.ki.speedgame.model.User;
+import pl.edu.agh.ki.speedgame.model.orm.Task;
 import pl.edu.agh.ki.speedgame.model.requests.LastResultResponse;
 import pl.edu.agh.ki.speedgame.model.requests.TaskConfig;
+import pl.edu.agh.ki.speedgame.repository.TaskRepository;
 
-import java.util.*;
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
 public class GameService implements IGameService {
+    @Autowired
+    private TaskRepository taskRepository;
+    @Autowired
+    private FolderScanService folderScanService;
+
     private List<Game> games;
     private Map<String, TaskConfig> mapTaskNameConfig;
     private Gson gson = new Gson();
@@ -32,6 +45,16 @@ public class GameService implements IGameService {
     public GameService() {
         this.games = Collections.synchronizedList(new ArrayList<Game>());
         this.mapTaskNameConfig = new ConcurrentHashMap<>();
+    }
+
+    @PostConstruct
+    public void setUp() {
+        taskRepository.saveAll(
+                folderScanService.getTaskNames()
+                        .stream()
+                        .map(Task::new)
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
