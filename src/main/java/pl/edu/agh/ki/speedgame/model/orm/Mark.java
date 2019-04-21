@@ -27,7 +27,8 @@ public class Mark {
     @Column(nullable = false)
     private int score;
 
-    public Mark(int score) {
+    public Mark(Task task, int score) {
         this.score = score;
+        this.task = task;
     }
 }

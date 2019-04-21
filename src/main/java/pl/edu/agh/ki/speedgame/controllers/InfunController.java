@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.edu.agh.ki.speedgame.exceptions.CannotRemoveGameException;
 import pl.edu.agh.ki.speedgame.exceptions.GameWithSuchIdExistException;
@@ -26,6 +25,7 @@ import pl.edu.agh.ki.speedgame.model.requests.CreateGameInput;
 import pl.edu.agh.ki.speedgame.model.requests.CreateGameInputConfig;
 import pl.edu.agh.ki.speedgame.model.requests.JoinGameInput;
 import pl.edu.agh.ki.speedgame.model.requests.LastResultResponse;
+import pl.edu.agh.ki.speedgame.model.requests.TaskMark;
 import pl.edu.agh.ki.speedgame.services.IFolderScanService;
 import pl.edu.agh.ki.speedgame.services.IGameService;
 import pl.edu.agh.ki.speedgame.services.MarkService;
@@ -76,9 +76,8 @@ public class InfunController {
         return "redirect:/newtask";
     }
 
-    @RequestMapping(value = "/newtask", method = RequestMethod.POST)
-    String getNewTask(@CookieValue("JSESSIONID") String cookie, @RequestParam String prevTaskName, @RequestParam int mark, Model model) {
-        markService.addMark(prevTaskName, mark);
+    @RequestMapping(value = "/newtask", method = RequestMethod.GET)
+    String getNewTask(@CookieValue("JSESSIONID") String cookie, Model model) {
         return "redirect:/tasks/new";
     }
 
@@ -132,7 +131,14 @@ public class InfunController {
 
     @RequestMapping(value = "/taskResult", method = RequestMethod.GET)
     String taskResult(@CookieValue("JSESSIONID") String cookie, Model model) {
+        model.addAttribute("taskMark", new TaskMark());
         return "taskResult";
+    }
+
+    @RequestMapping(value = "/taskResult", method = RequestMethod.POST)
+    String addMark(@ModelAttribute TaskMark taskMark, @CookieValue("JSESSIONID") String cookie, Model model) throws NoSuchUserException, SuchUserExistException, NoSuchGameException {
+        markService.addMark(taskMark.getTaskName(), taskMark.getMark());
+        return "redirect:/newtask";
     }
 
     @RequestMapping(value = "/end", method = RequestMethod.GET)

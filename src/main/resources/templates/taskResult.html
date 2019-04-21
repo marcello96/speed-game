@@ -40,9 +40,11 @@
             </textarea>
     </div>
 
-    <form action="/newtask" th:align="center">
-        <input type="hidden" name="mark" value="5" />
-        <input type="hidden" name="prevTaskName" th:value="${taskName}" />
+    <form action="#" th:object="${taskMark}" th:action="@{/taskResult}" th:align="center" method="post">
+        <input hidden th:type="text" th:field="*{taskName}"
+               id="inputTaskName" placeholder="tetris"/>
+        <input th:type="number" th:field="*{mark}"
+               id="inputMark" placeholder="5"/>
         <input class="btn btn-primary" type="submit" value="Zacznij nowe zadanie"/>
     </form>
 

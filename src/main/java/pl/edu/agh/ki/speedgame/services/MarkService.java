@@ -12,8 +12,9 @@ public class MarkService {
     private TaskRepository taskRepository;
 
     public void addMark(String taskName, int mark) {
-        Task prevTask = taskRepository.getTaskByName(taskName);
-        prevTask.getMarks().add(new Mark(mark));
+        Task prevTask = taskRepository.getTaskByName("tetris");
+        Mark newMark = new Mark(prevTask, mark);
+        prevTask.getMarks().add(newMark);
         taskRepository.save(prevTask);
     }
 }
