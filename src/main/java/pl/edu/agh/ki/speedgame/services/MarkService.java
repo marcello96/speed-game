@@ -14,7 +14,7 @@ public class MarkService {
     }
 
     public void addMark(String taskName, int mark) {
-        Mark taskMark = markRepository.getMarkByName("tetris");
+        Mark taskMark = markRepository.getMarkByName(taskName);
         int amountOfMarks = taskMark.getAmountOfMarks();
         taskMark.setAverageMark((taskMark.getAverageMark() * amountOfMarks +  mark) / (amountOfMarks + 1));
         taskMark.setAmountOfMarks(amountOfMarks + 1);

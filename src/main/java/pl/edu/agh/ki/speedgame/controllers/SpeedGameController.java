@@ -102,13 +102,12 @@ public class SpeedGameController {
     public String endGame(@PathVariable(value = "task_name") final String taskName, @RequestBody TaskResult taskResult, @CookieValue(SESSION_COOKIE_NAME) String cookie, Model model) throws NoSuchGameException, NoSuchUserException {
         gameService.addResult(taskName, cookie, taskResult.getNick(), taskResult.getGroup(), taskResult.getResult());
         model.addAttribute("result", taskResult);
-        model.addAttribute("taskName", taskName);
-        return "/taskResult";
+        return "/" + taskName + "/result";
     }
 
-    @GetMapping(value = "/taskResult")
-    public String taskResult(Model model) {
-        model.addAttribute("taskMark", new TaskMark());
+    @GetMapping(value = "/{task_name}/result")
+    public String taskResult(@PathVariable(value = "task_name") final String taskName, Model model) {
+        model.addAttribute("taskMark", new TaskMark(taskName));
         return "taskResult";
     }
 
