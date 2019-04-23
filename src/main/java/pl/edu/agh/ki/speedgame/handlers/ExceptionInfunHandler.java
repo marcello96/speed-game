@@ -13,14 +13,14 @@ public class ExceptionInfunHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InFunException.class)
     public final String handleInFunException(InFunException ex, Model model) {
-        ex.printStackTrace();
+        log.error("Handle error", ex);
         model.addAttribute("error", ex.getMessage());
         return "errorView";
     }
 
     @ExceptionHandler(Exception.class)
     public final String handleException(Exception ex, Model model) {
-        ex.printStackTrace();
+        log.error("Handle error", ex);
         model.addAttribute("error", "Błąd ogólny");
         return "errorView";
     }

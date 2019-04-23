@@ -12,5 +12,4 @@ public class SpeedGameApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
 }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaRepositories("pl.edu.agh.ki.speedgame.repository")
-@EntityScan("pl.edu.agh.ki.speedgame.model.orm")
+@EntityScan("pl.edu.agh.ki.speedgame.model.dao")
 public class SpeedGameApplication {
 
     public static void main(String[] args) {

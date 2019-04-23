@@ -14,14 +14,14 @@
         var lastResult = 0.0;
         xhr.open('GET', '/last/results', true);
         xhr.onreadystatechange = function() {
-            if (xhr.readyState == XMLHttpRequest.DONE) {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
                 var json = xhr.responseText;
                 obj = JSON.parse(json);
-                score = obj['score']
-                lastResult = obj['lastResult']
+                score = obj['score'];
+                lastResult = obj['lastResult'];
                 document.getElementById("comment").value = 'Ostatni wynik = ' + lastResult + '\nCałkowity wynik = ' + score;
             }
-        }
+        };
         xhr.send(null);
     </script>
 </head>

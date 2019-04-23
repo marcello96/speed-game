@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class FolderScanService implements IFolderScanService {
+public class FolderScanService {
 
     private final String CONFIG_FILE_NAME = "config.json";
 
@@ -22,7 +22,6 @@ public class FolderScanService implements IFolderScanService {
         scanFolder();
     }
 
-    @Override
     public List<String> scanFolder() {
         List<String> result = new ArrayList<>();
         try {
@@ -46,7 +45,6 @@ public class FolderScanService implements IFolderScanService {
         return result;
     }
 
-    @Override
     public List<String> getTaskNames() {
         List<String> taskNames = new ArrayList<>();
         try {

@@ -2,13 +2,19 @@ package pl.edu.agh.ki.speedgame.model;
 
 import com.google.gson.Gson;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import pl.edu.agh.ki.speedgame.exceptions.SuchUserExistException;
 import pl.edu.agh.ki.speedgame.model.requests.TaskConfig;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Data
+@Slf4j
 public class Game {
     private String id;
     private List<TaskConfig> tasksConfig;
@@ -16,14 +22,14 @@ public class Game {
     private List<User> userList;
     private String creatorCookie;
     private int taskNumber;
-    private Gson gson = new Gson();
+    private Gson gson;
     private Random random;
 
     public Game(String id, List<TaskConfig> tasksConfig, String creatorCookie, int taskNumber) {
         this.random = new Random();
         this.gson = new Gson();
         this.id = id;
-        this.userList = Collections.synchronizedList(new ArrayList<User>());
+        this.userList = Collections.synchronizedList(new ArrayList<>());
         this.tasksConfig = tasksConfig;
         this.tasks = createTasksSequence(tasksConfig.stream().map(TaskConfig::getName).collect(Collectors.toList()), taskNumber);
         this.creatorCookie = creatorCookie;
@@ -36,7 +42,7 @@ public class Game {
             for (int i = 0; i < taskNumber; i++) {
                 resultList.add(tasks.get(0));
             }
-            System.out.println("GENERATED LIST = " + resultList);
+            log.info("GENERATED LIST = " + resultList);
             return resultList;
         }
 
@@ -49,12 +55,12 @@ public class Game {
             tasks.add(previousTask);
             previousTask = currentTask;
         }
-        System.out.println("GENERATED LIST = " + resultList);
+        log.info("GENERATED LIST = " + resultList);
         return resultList;
     }
 
     public void addUser(String name, int age, String cookie) throws SuchUserExistException {
-        if (userList.stream().filter(u -> u.getNick().equals(name)).count() > 0) {
+        if (userList.stream().anyMatch(u -> u.getNick().equals(name))) {
             throw new SuchUserExistException("Użytkownika = " + name + " już istnieje");
         }
         userList.add(new User(name, age, cookie, new ArrayList<>(tasks)));

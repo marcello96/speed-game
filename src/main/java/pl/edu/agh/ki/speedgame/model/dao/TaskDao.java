@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.speedgame.model.orm;
+package pl.edu.agh.ki.speedgame.model.dao;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-public class Task {
+public class TaskDao {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -25,9 +25,9 @@ public class Task {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL )
-    private List<Mark> marks;
+    private List<MarkDao> marks;
 
-    public Task(String name) {
+    public TaskDao(String name) {
         this.name = name;
     }
 }

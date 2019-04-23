@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.speedgame.model;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import pl.edu.agh.ki.speedgame.exceptions.NoMoreAvailableTasksException;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import static pl.edu.agh.ki.speedgame.utils.InFunUtils.RED;
 import static pl.edu.agh.ki.speedgame.utils.InFunUtils.RESET;
 
 @Data
+@Slf4j
 public class User {
     private String nick;
     private int age;
@@ -29,13 +31,13 @@ public class User {
 
     public void addUserResult(double result, String task) {
         if (!currentTask.equals(task))
-            System.out.println(RED + "Given result = " + result + " it's from wrong task = " + task + " but current task is = " + currentTask + RESET);
+            log.info(RED + "Given result = " + result + " it's from wrong task = " + task + " but current task is = " + currentTask + RESET);
         this.score += result;
         this.lastResult = result;
     }
 
     public String getRandomTask() throws NoMoreAvailableTasksException {
-        if (availableTasks.size() > 0) {
+        if (!availableTasks.isEmpty()) {
             currentTask = availableTasks.remove(0);
             return currentTask;
         } else {
