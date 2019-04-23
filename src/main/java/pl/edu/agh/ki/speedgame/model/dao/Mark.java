@@ -21,7 +21,7 @@ public class Mark {
     private String name;
 
     @Column(nullable = false)
-    private int averageMark;
+    private double averageMark;
 
     @Column(nullable = false)
     private int amountOfMarks;

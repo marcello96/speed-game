@@ -21,17 +21,12 @@ import java.util.stream.Collectors;
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
-    private static final String TASKS_DIR_PATH = "classpath:/tasks";
-    private static final String TASKS_SOURCES_PATH = TASKS_DIR_PATH + "/";
-    private static final String STATIC_SOURCES_PATH = "classpath:/static/";
-
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/js/**").addResourceLocations(TASKS_SOURCES_PATH, STATIC_SOURCES_PATH + "js/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
-        registry.addResourceHandler("/css/**").addResourceLocations(TASKS_SOURCES_PATH, STATIC_SOURCES_PATH + "css/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
-        registry.addResourceHandler("/img/**").addResourceLocations(TASKS_SOURCES_PATH,STATIC_SOURCES_PATH + "img/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
-        registry.addResourceHandler("/lib/**").addResourceLocations(TASKS_SOURCES_PATH, STATIC_SOURCES_PATH + "lib/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/tasks/", "classpath:/static/js/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/tasks/", "classpath:/static/css/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/tasks/", "classpath:/static/img/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/lib/**").addResourceLocations("classpath:/tasks/", "classpath:/static/lib/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
 
         registry.addResourceHandler("/tasks/**/js/**").addResourceLocations(listCompo("js")).setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
         registry.addResourceHandler("/tasks/**/css/**").addResourceLocations(listCompo("css")).setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
@@ -40,17 +35,20 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     private String[] listCompo(String suffix) {
-        ArrayList<String> res = new ArrayList<>(Arrays.asList(TASKS_SOURCES_PATH, STATIC_SOURCES_PATH + suffix + "/"));
+        ArrayList<String> res = new ArrayList<>(Arrays.asList("classpath:/tasks/", "classpath:/static/" + suffix + "/"));
         try {
-            if (ResourceUtils.getFile(TASKS_DIR_PATH).isDirectory() && ResourceUtils.getFile(TASKS_DIR_PATH).listFiles() != null) {
+            if (ResourceUtils.getFile("classpath:tasks").isDirectory() && ResourceUtils.getFile("classpath:tasks").listFiles() != null) {
                 res.addAll(
-                        Arrays.stream(ResourceUtils.getFile(TASKS_DIR_PATH).listFiles())
+                        Arrays.stream(
+                                ResourceUtils.getFile("classpath:tasks").listFiles())
                                 .filter(File::isDirectory)
-                                .map(file -> TASKS_SOURCES_PATH + file.getName() + "/" + suffix)
+                                .map(file -> "classpath:/tasks/" + file.getName() + "/" + suffix)
                                 .collect(Collectors.toList())
                 );
             }
-        } catch (FileNotFoundException ignored) {}
+
+        } catch (FileNotFoundException ignored) {
+        }
         return res.toArray(new String[]{});
     }
 
