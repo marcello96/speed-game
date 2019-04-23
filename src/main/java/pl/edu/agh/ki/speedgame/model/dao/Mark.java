@@ -3,20 +3,16 @@ package pl.edu.agh.ki.speedgame.model.dao;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class TaskDao {
+public class Mark {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -24,10 +20,13 @@ public class TaskDao {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.ALL )
-    private List<MarkDao> marks;
+    @Column(nullable = false)
+    private int averageMark;
 
-    public TaskDao(String name) {
+    @Column(nullable = false)
+    private int amountOfMarks;
+
+    public Mark(String name) {
         this.name = name;
     }
 }

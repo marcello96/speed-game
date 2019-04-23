@@ -15,10 +15,10 @@ import pl.edu.agh.ki.speedgame.exceptions.NoSuchUserException;
 import pl.edu.agh.ki.speedgame.exceptions.SuchUserExistException;
 import pl.edu.agh.ki.speedgame.model.Game;
 import pl.edu.agh.ki.speedgame.model.User;
-import pl.edu.agh.ki.speedgame.model.dao.TaskDao;
+import pl.edu.agh.ki.speedgame.model.dao.Mark;
 import pl.edu.agh.ki.speedgame.model.requests.LastResultResponse;
 import pl.edu.agh.ki.speedgame.model.requests.TaskConfig;
-import pl.edu.agh.ki.speedgame.repository.TaskRepository;
+import pl.edu.agh.ki.speedgame.repository.MarkRepository;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -32,15 +32,15 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class GameService {
-    private final TaskRepository taskRepository;
+    private final MarkRepository markRepository;
     private final FolderScanService folderScanService;
 
     private List<Game> games;
     private Map<String, TaskConfig> mapTaskNameConfig;
     private Gson gson = new Gson();
 
-    public GameService(TaskRepository taskRepository, FolderScanService folderScanService) {
-        this.taskRepository = taskRepository;
+    public GameService(MarkRepository markRepository, FolderScanService folderScanService) {
+        this.markRepository = markRepository;
         this.folderScanService = folderScanService;
         this.games = Collections.synchronizedList(new ArrayList<>());
         this.mapTaskNameConfig = new ConcurrentHashMap<>();
@@ -48,10 +48,10 @@ public class GameService {
 
     @PostConstruct
     public void setUp() {
-        taskRepository.saveAll(
+        markRepository.saveAll(
                 folderScanService.getTaskNames()
                         .stream()
-                        .map(TaskDao::new)
+                        .map(Mark::new)
                         .collect(Collectors.toList())
         );
     }
