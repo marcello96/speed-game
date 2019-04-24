@@ -12,21 +12,22 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public SecurityConfig() {
-        super();
-    }
-
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                .and().csrf().disable()
-                .headers().cacheControl().disable();
+                .and()
+                .authorizeRequests()
+                    .antMatchers("/").permitAll()
+                .and()
+                .csrf().disable()
+                .headers()
+                    .cacheControl().disable()
+                    .frameOptions().disable();
     }
 
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
-
 }

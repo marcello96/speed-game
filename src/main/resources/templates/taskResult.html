@@ -14,14 +14,14 @@
         var lastResult = 0.0;
         xhr.open('GET', '/last/results', true);
         xhr.onreadystatechange = function() {
-            if (xhr.readyState == XMLHttpRequest.DONE) {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
                 var json = xhr.responseText;
                 obj = JSON.parse(json);
-                score = obj['score']
-                lastResult = obj['lastResult']
+                score = obj['score'];
+                lastResult = obj['lastResult'];
                 document.getElementById("comment").value = 'Ostatni wynik = ' + lastResult + '\nCałkowity wynik = ' + score;
             }
-        }
+        };
         xhr.send(null);
     </script>
 </head>
@@ -40,7 +40,11 @@
             </textarea>
     </div>
 
-    <form action="/newtask" th:align="center">
+    <form action="#" th:object="${taskMark}" th:action="@{/taskResult}" th:align="center" method="post">
+        <input hidden th:type="text" th:field="*{taskName}"
+               id="inputTaskName" placeholder="tetris"/>
+        <input th:type="number" th:field="*{mark}"
+               id="inputMark" placeholder="5"/>
         <input class="btn btn-primary" type="submit" value="Zacznij nowe zadanie"/>
     </form>
 

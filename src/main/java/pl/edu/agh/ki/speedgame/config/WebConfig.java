@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.resource.GzipResourceResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.EncodedResourceResolver;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
@@ -19,19 +19,19 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebMvc
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/tasks/", "classpath:/static/js/").setCachePeriod(0).resourceChain(false).addResolver(new GzipResourceResolver()).addResolver(new PathResourceResolver());
-        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/tasks/", "classpath:/static/css/").setCachePeriod(0).resourceChain(false).addResolver(new GzipResourceResolver()).addResolver(new PathResourceResolver());
-        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/tasks/", "classpath:/static/img/").setCachePeriod(0).resourceChain(false).addResolver(new GzipResourceResolver()).addResolver(new PathResourceResolver());
-        registry.addResourceHandler("/lib/**").addResourceLocations("classpath:/tasks/", "classpath:/static/lib/").setCachePeriod(0).resourceChain(false).addResolver(new GzipResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/tasks/", "classpath:/static/js/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/tasks/", "classpath:/static/css/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/tasks/", "classpath:/static/img/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/lib/**").addResourceLocations("classpath:/tasks/", "classpath:/static/lib/").setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
 
-        registry.addResourceHandler("/tasks/**/js/**").addResourceLocations(listCompo("js")).setCachePeriod(0).resourceChain(false).addResolver(new GzipResourceResolver()).addResolver(new PathResourceResolver());
-        registry.addResourceHandler("/tasks/**/css/**").addResourceLocations(listCompo("css")).setCachePeriod(0).resourceChain(false).addResolver(new GzipResourceResolver()).addResolver(new PathResourceResolver());
-        registry.addResourceHandler("/tasks/**/img/**").addResourceLocations(listCompo("img")).setCachePeriod(0).resourceChain(false).addResolver(new GzipResourceResolver()).addResolver(new PathResourceResolver());
-        registry.addResourceHandler("/tasks/**/lib/**").addResourceLocations(listCompo("lib")).setCachePeriod(0).resourceChain(false).addResolver(new GzipResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/tasks/**/js/**").addResourceLocations(listCompo("js")).setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/tasks/**/css/**").addResourceLocations(listCompo("css")).setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/tasks/**/img/**").addResourceLocations(listCompo("img")).setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/tasks/**/lib/**").addResourceLocations(listCompo("lib")).setCachePeriod(0).resourceChain(false).addResolver(new EncodedResourceResolver()).addResolver(new PathResourceResolver());
     }
 
     private String[] listCompo(String suffix) {
@@ -61,7 +61,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         yourTemplateResolver.setCacheable(false);
         yourTemplateResolver.setTemplateMode(TemplateMode.HTML);
         yourTemplateResolver.setCharacterEncoding("UTF-8");
-        yourTemplateResolver.setOrder(0);  // this is iportant. This way spring boot will listen to both places 0 and 1
+        yourTemplateResolver.setOrder(0);  // this is important. This way spring boot will listen to both places 0 and 1
         yourTemplateResolver.setCheckExistence(true);
 
         return yourTemplateResolver;

@@ -1,7 +1,7 @@
 package pl.edu.agh.ki.speedgame.model;
 
 import lombok.Data;
-import pl.edu.agh.ki.speedgame.exceptions.NoMoreAvailableTasksException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import static pl.edu.agh.ki.speedgame.utils.InFunUtils.RED;
 import static pl.edu.agh.ki.speedgame.utils.InFunUtils.RESET;
 
 @Data
+@Slf4j
 public class User {
     private String nick;
     private int age;
@@ -18,28 +19,25 @@ public class User {
     private List<String> availableTasks;
     private int completedNumber;
     private String currentTask;
+    private int leftTasks;
 
-    public User(String nick, int age, String cookieValue, List<String> taskList) {
+    public User(String nick, int age, String cookieValue, List<String> taskList, int leftTasks) {
         this.nick = nick;
         this.age = age;
         this.cookieValue = cookieValue;
         this.availableTasks = taskList;
         this.lastResult = 0;
+        this.leftTasks = leftTasks;
     }
 
     public void addUserResult(double result, String task) {
         if (!currentTask.equals(task))
-            System.out.println(RED + "Given result = " + result + " it's from wrong task = " + task + " but current task is = " + currentTask + RESET);
+            log.info(RED + "Given result = " + result + " it's from wrong task = " + task + " but current task is = " + currentTask + RESET);
         this.score += result;
         this.lastResult = result;
     }
 
-    public String getRandomTask() throws NoMoreAvailableTasksException {
-        if (availableTasks.size() > 0) {
-            currentTask = availableTasks.remove(0);
-            return currentTask;
-        } else {
-            throw new NoMoreAvailableTasksException("Nie ma już więcej dostępnych zadań");
-        }
+    public void decrementLeftTasks() {
+        --leftTasks;
     }
 }

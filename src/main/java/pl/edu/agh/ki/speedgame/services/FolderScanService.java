@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class FolderScanService implements IFolderScanService {
+public class FolderScanService {
 
     private final String CONFIG_FILE_NAME = "config.json";
 
@@ -22,7 +22,6 @@ public class FolderScanService implements IFolderScanService {
         scanFolder();
     }
 
-    @Override
     public List<String> scanFolder() {
         List<String> result = new ArrayList<>();
         try {
@@ -46,4 +45,17 @@ public class FolderScanService implements IFolderScanService {
         return result;
     }
 
+    public List<String> getTaskNames() {
+        List<String> taskNames = new ArrayList<>();
+        try {
+            if (ResourceUtils.getFile("classpath:tasks").isDirectory() && ResourceUtils.getFile("classpath:tasks").listFiles() != null)
+                for (File file : ResourceUtils.getFile("classpath:tasks").listFiles()) {
+                    taskNames.add(file.getName());
+                }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return taskNames;
+    }
 }
