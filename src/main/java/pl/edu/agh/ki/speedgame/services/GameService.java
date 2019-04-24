@@ -33,14 +33,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GameService {
     private final MarkRepository markRepository;
+    private final UserService userService;
     private final FolderScanService folderScanService;
 
     private List<Game> games;
     private Map<String, TaskConfig> mapTaskNameConfig;
     private Gson gson = new Gson();
 
-    public GameService(MarkRepository markRepository, FolderScanService folderScanService) {
+    public GameService(MarkRepository markRepository, UserService userService, FolderScanService folderScanService) {
         this.markRepository = markRepository;
+        this.userService = userService;
         this.folderScanService = folderScanService;
         this.games = Collections.synchronizedList(new ArrayList<>());
         this.mapTaskNameConfig = new ConcurrentHashMap<>();
@@ -114,18 +116,8 @@ public class GameService {
             throw new NoSuchUserException("Nie ma użytkownika z ciasteczkiem = " + cookie);
         }
 
-        User user = userOptional.get();
-        return user.getRandomTask();
+        return userService.getTaskNameIfAvailable(userOptional.get());
     }
-
-   /* public boolean isCreator(String groupId, String cookie) {
-        return games
-                .stream()
-                .filter(g -> g.getId().equals(groupId))
-                .findFirst()
-                .map(g -> g.getCreatorCookie().equals(cookie))
-                .orElse(false);
-    }*/
 
     public void removeGame(String groupId, String cookie) throws CannotRemoveGameException {
         Optional<Game> game = games.stream().filter(g -> g.getId().equals(groupId) && g.getCreatorCookie().equals(cookie)).findAny();

@@ -2,7 +2,6 @@ package pl.edu.agh.ki.speedgame.model;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import pl.edu.agh.ki.speedgame.exceptions.NoMoreAvailableTasksException;
 
 import java.util.List;
 
@@ -20,13 +19,15 @@ public class User {
     private List<String> availableTasks;
     private int completedNumber;
     private String currentTask;
+    private int leftTasks;
 
-    public User(String nick, int age, String cookieValue, List<String> taskList) {
+    public User(String nick, int age, String cookieValue, List<String> taskList, int leftTasks) {
         this.nick = nick;
         this.age = age;
         this.cookieValue = cookieValue;
         this.availableTasks = taskList;
         this.lastResult = 0;
+        this.leftTasks = leftTasks;
     }
 
     public void addUserResult(double result, String task) {
@@ -36,12 +37,7 @@ public class User {
         this.lastResult = result;
     }
 
-    public String getRandomTask() throws NoMoreAvailableTasksException {
-        if (!availableTasks.isEmpty()) {
-            currentTask = availableTasks.remove(0);
-            return currentTask;
-        } else {
-            throw new NoMoreAvailableTasksException("Nie ma już więcej dostępnych zadań");
-        }
+    public void decrementLeftTasks() {
+        --leftTasks;
     }
 }

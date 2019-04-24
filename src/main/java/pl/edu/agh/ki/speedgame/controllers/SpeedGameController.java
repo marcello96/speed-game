@@ -22,10 +22,10 @@ import pl.edu.agh.ki.speedgame.model.domain.TaskResult;
 import pl.edu.agh.ki.speedgame.model.requests.CreateGameInput;
 import pl.edu.agh.ki.speedgame.model.requests.CreateGameInputConfig;
 import pl.edu.agh.ki.speedgame.model.requests.JoinGameInput;
-import pl.edu.agh.ki.speedgame.model.requests.ManagementService;
 import pl.edu.agh.ki.speedgame.model.requests.TaskMark;
 import pl.edu.agh.ki.speedgame.services.FolderScanService;
 import pl.edu.agh.ki.speedgame.services.GameService;
+import pl.edu.agh.ki.speedgame.services.ManagementService;
 import pl.edu.agh.ki.speedgame.services.MarkService;
 
 import java.util.List;
