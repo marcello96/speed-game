@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.edu.agh.ki.speedgame.exceptions.CannotRemoveGameException;
 import pl.edu.agh.ki.speedgame.exceptions.GameWithSuchIdExistException;
@@ -102,11 +103,11 @@ public class SpeedGameController {
     public String endGame(@PathVariable(value = "task_name") final String taskName, @RequestBody TaskResult taskResult, @CookieValue(SESSION_COOKIE_NAME) String cookie, Model model) throws NoSuchGameException, NoSuchUserException {
         gameService.addResult(taskName, cookie, taskResult.getNick(), taskResult.getGroup(), taskResult.getResult());
         model.addAttribute("result", taskResult);
-        return "/" + taskName + "/result";
+        return "/taskResult?taskName=" + taskName;
     }
 
-    @GetMapping(value = "/{task_name}/result")
-    public String taskResult(@PathVariable(value = "task_name") final String taskName, Model model) {
+    @GetMapping(value = "/taskResult")
+    public String taskResult(@RequestParam(value = "taskName") final String taskName, Model model) {
         model.addAttribute("taskMark", new TaskMark(taskName));
         return "taskResult";
     }
