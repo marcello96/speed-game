@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>InFUN</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/input_view.css"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+<script type="text/javascript">
+    setTimeout(function(){
+        location = ''
+    },5000)
+</script>
+<body>
+
+<div class="container data thumbnail">
+
+    <table class="table-striped" style="width: 100%; font-size: 150%;">
+        <thead>
+        <tr>
+            <th> Game Name </th>
+            <th> Average Rating </th>
+            <th> Amount of Ratings </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${ratings.empty}">
+            <td colspan="3"> No Ratings so far </td>
+        </tr>
+        <tr th:each="rating : ${ratings}">
+            <td><span th:text="${rating.name}"> Game Name </span></td>
+            <td><span th:text="${rating.averageMark}"> Average Rating </span></td>
+            <td><span th:text="${rating.amountOfMarks}"> Amount of Ratings </span></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
