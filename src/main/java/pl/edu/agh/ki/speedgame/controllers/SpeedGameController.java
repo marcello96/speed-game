@@ -129,4 +129,10 @@ public class SpeedGameController {
         gameService.removeGame(groupId, cookie);
         return "redirect:/";
     }
+
+    @GetMapping(value = "/ratings")
+    public String ratings(Model model) {
+        model.addAttribute("ratings", markService.getAllMarks());
+        return "ratings";
+    }
 }

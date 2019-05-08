@@ -1,12 +1,18 @@
 package pl.edu.agh.ki.speedgame.services;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import pl.edu.agh.ki.speedgame.model.dao.Mark;
 import pl.edu.agh.ki.speedgame.repository.MarkRepository;
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class MarkService {
@@ -25,13 +31,27 @@ public class MarkService {
         markRepository.save(taskMark);
     }
 
+    public List<Mark> getAllMarks() {
+        return StreamSupport.stream(markRepository.findAll().spliterator(), false)
+                .filter(mark -> mark.getAmountOfMarks() > 0)
+                .collect(toList());
+    }
+
     public String getRandomGame(List<String> games) {
-        return markRepository.getMarksByNameIn(games)
+        AtomicReference<Double> accumulatedWeight = new AtomicReference<>(0.0);
+
+        List<Pair<String, Double>> gameProbabilityPairs = markRepository.getMarksByNameIn(games)
                 .stream()
-                .map(mark -> new ImmutablePair<>(mark.getName(), calculateProbability(mark)))
-                .max(Comparator.comparing(ImmutablePair::getValue))
-                .get()
-                .getKey();
+                .map(mark -> new ImmutablePair<>(mark.getName(), accumulatedWeight.accumulateAndGet(calculateProbability(mark), Double::sum)))
+                .collect(toList());
+
+        double randomWeight = new Random().nextDouble() * accumulatedWeight.get();
+
+        return gameProbabilityPairs.stream()
+                .filter(pair -> pair.getValue() >= randomWeight)
+                .findFirst()
+                .map(Pair::getKey)
+                .get();
     }
 
     private static double calculateProbability(Mark mark) {

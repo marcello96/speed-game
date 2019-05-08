@@ -43,8 +43,24 @@
     <form action="#" th:object="${taskMark}" th:action="@{/taskResult}" th:align="center" method="post">
         <input hidden th:type="text" th:field="*{taskName}"
                id="inputTaskName" placeholder="tetris"/>
-        <input th:type="number" th:field="*{mark}"
-               id="inputMark" placeholder="5"/>
+
+        <div class="rate">
+            <input th:type="radio" id="star5" th:field="*{mark}" name="rate" value="5" />
+            <label for="star5" title="text">5 stars</label>
+
+            <input th:type="radio" id="star4" th:field="*{mark}" name="rate" value="4" />
+            <label for="star4" title="text">4 stars</label>
+
+            <input th:type="radio" id="star3" th:field="*{mark}" name="rate" value="3" />
+            <label for="star3" title="text">3 stars</label>
+
+            <input th:type="radio" id="star2" th:field="*{mark}" name="rate" value="2" />
+            <label for="star2" title="text">2 stars</label>
+
+            <input th:type="radio" id="star1" th:field="*{mark}" name="rate" value="1" />
+            <label for="star1" title="text">1 star</label>
+        </div>
+
         <input class="btn btn-primary" type="submit" value="Zacznij nowe zadanie"/>
     </form>
 
