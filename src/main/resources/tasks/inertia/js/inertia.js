@@ -13,7 +13,8 @@
  * global variables, and provides the puzzle init function and a
  * couple of other helper functions.
  */
-
+var global_width = 8;
+var global_height = 8;
 var points = 0;
 
 // To avoid flicker while doing complicated drawing, we use two
@@ -100,6 +101,13 @@ var undo_button, redo_button;
 // A div element enclosing both the puzzle and its status bar, used
 // for positioning the resize handle.
 var resizable_div;
+
+function changeSize(width, height){
+    document.getElementById("gametype").getElementsByTagName("li")[3].click();
+    document.getElementsByTagName("input")[0].value = width;
+    document.getElementsByTagName("input")[1].value = height;
+    document.getElementsByTagName("form")[0].getElementsByTagName("input")[2].click();
+}
 
 function displayHelpModal(){
     var modal = document.getElementById('helpModal');
@@ -212,6 +220,22 @@ function dialog_cleanup() {
 
 // Init function called from body.onload.
 function initPuzzle() {
+    if (config['age'] < 8) {
+        global_width = 5;
+        global_height = 5;
+    }
+    else if (config['age'] < 15) {
+        global_width = 6;
+        global_height = 6;
+    }
+    else if (config['age'] < 20) {
+        global_width = 7;
+        global_height = 7;
+    }
+    else {
+        global_width = 8;
+        global_height = 8;
+    }
     // Construct the off-screen canvas used for double buffering.
     onscreen_canvas = document.getElementById("puzzlecanvas");
     offscreen_canvas = document.createElement("canvas");
@@ -391,8 +415,8 @@ function initPuzzle() {
         }
     };*/
 
-    //gametypelist = document.getElementById("gametype");
-    //gametypesubmenus.push(gametypelist);
+    gametypelist = document.getElementById("gametype");
+    gametypesubmenus.push(gametypelist);
 
     // In IE, the canvas doesn't automatically gain focus on a mouse
     // click, so make sure it does
@@ -517,6 +541,7 @@ function initPuzzle() {
     // show the div containing the actual puzzle.
     document.getElementById("apology").style.display = "none";
     document.getElementById("puzzle").style.display = "inline";
+    changeSize(global_width, global_height);
 }
 
 // The Module object: Our interface to the outside world. We import
@@ -2008,8 +2033,8 @@ function _js_add_preset(menuid, ptr, value) {
     tick.style.paddingRight = "0.5em";
     item.appendChild(tick);
     item.appendChild(document.createTextNode(name));
-    //gametypesubmenus[menuid].appendChild(item);
-    //gametypeitems.push(item);
+    gametypesubmenus[menuid].appendChild(item);
+    gametypeitems.push(item);
 
     item.onclick = function(event) {
         if (dlg_dimmer === null) {
@@ -6289,9 +6314,9 @@ function _js_add_preset_submenu(menuid, ptr, value) {
     item.appendChild(document.createTextNode(name));
     var submenu = document.createElement("ul");
     item.appendChild(submenu);
-    //gametypesubmenus[menuid].appendChild(item);
-    //var toret = gametypesubmenus.length;
-    //gametypesubmenus.push(submenu);
+    gametypesubmenus[menuid].appendChild(item);
+    var toret = gametypesubmenus.length;
+    gametypesubmenus.push(submenu);
     return 0;//toret;
 }
 
