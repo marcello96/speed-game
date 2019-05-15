@@ -31,7 +31,7 @@ public class GameRestController {
     @RequestMapping("/{group_id}/results")
     @ResponseBody
     public Map<String, Double> getResults(@PathVariable(value = "group_id") final String groupId, @CookieValue("JSESSIONID") String cookie) throws NoSuchGameException, AccessDeniedException {
-        return gameService.getResults(groupId, cookie);
+        return gameService.getResults();
     }
 
     @RequestMapping("/last/results")

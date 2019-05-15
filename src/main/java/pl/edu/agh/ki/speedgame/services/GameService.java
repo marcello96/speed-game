@@ -2,17 +2,9 @@ package pl.edu.agh.ki.speedgame.services;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.text.CharacterPredicates;
-import org.apache.commons.text.RandomStringGenerator;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import pl.edu.agh.ki.speedgame.exceptions.AccessDeniedException;
-import pl.edu.agh.ki.speedgame.exceptions.CannotRemoveGameException;
-import pl.edu.agh.ki.speedgame.exceptions.GameWithSuchIdExistException;
-import pl.edu.agh.ki.speedgame.exceptions.NoMoreAvailableTasksException;
-import pl.edu.agh.ki.speedgame.exceptions.NoSuchGameException;
-import pl.edu.agh.ki.speedgame.exceptions.NoSuchUserException;
-import pl.edu.agh.ki.speedgame.exceptions.SuchUserExistException;
+import pl.edu.agh.ki.speedgame.exceptions.*;
 import pl.edu.agh.ki.speedgame.model.Game;
 import pl.edu.agh.ki.speedgame.model.User;
 import pl.edu.agh.ki.speedgame.model.dao.Mark;
@@ -21,13 +13,14 @@ import pl.edu.agh.ki.speedgame.model.requests.TaskConfig;
 import pl.edu.agh.ki.speedgame.repository.MarkRepository;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingDouble;
 
 @Service
 @Slf4j
@@ -36,7 +29,8 @@ public class GameService {
     private final UserService userService;
     private final FolderScanService folderScanService;
 
-    private List<Game> games;
+    private Game theGame;
+    private Lock theGameLock;
     private Map<String, TaskConfig> mapTaskNameConfig;
     private Gson gson = new Gson();
 
@@ -44,18 +38,24 @@ public class GameService {
         this.markRepository = markRepository;
         this.userService = userService;
         this.folderScanService = folderScanService;
-        this.games = Collections.synchronizedList(new ArrayList<>());
         this.mapTaskNameConfig = new ConcurrentHashMap<>();
+        this.theGameLock = new ReentrantLock();
     }
 
     @PostConstruct
     public void setUp() {
+        theGameLock.lock();
         markRepository.saveAll(
                 folderScanService.getTaskNames()
                         .stream()
                         .map(Mark::new)
                         .collect(Collectors.toList())
         );
+        theGame = new Game(
+                "123",
+                getTasks(folderScanService.scanFolder())
+        );
+        theGameLock.unlock();
     }
 
     public List<TaskConfig> getTasks(List<String> jsons) {
@@ -66,110 +66,102 @@ public class GameService {
     }
 
 
-    public void addGame(Game game) throws GameWithSuchIdExistException {
-        if (games.stream().anyMatch(g -> g.getId().equals(game.getId()))) {
-            throw new GameWithSuchIdExistException("Gra z id = " + game.getId() + " już istnieje");
+    public void addGame(Game game) {
+        theGameLock.lock();
+        if (this.theGame == null) {
+            this.theGame = game;
+        } else {
+            this.theGame.updateTasks(game.getTasksConfig());
         }
-        games.add(game);
+        theGameLock.unlock();
     }
 
-    public void addUser(String name, int age, String group, String cookie) throws SuchUserExistException {
-        if (games.stream().anyMatch(g -> g.getUserByCookie(cookie).isPresent())) {
-            throw new SuchUserExistException("Użytkownik z ciasteczkiem " + cookie + " już istanieje");
-        }
-
-        Optional<Game> game = games.stream().filter(g -> g.getId().equals(group)).findFirst();
-        if (game.isPresent()) {
-            game.get().addUser(name, age, cookie);
+    public void addUser(String name, int age, String cookie) throws SuchUserExistException {
+        theGameLock.lock();
+        try {
+            Optional<User> previousUser = theGame.getUserByCookie(cookie);
+            if (!previousUser.isPresent()) {
+                theGame.addUser(name, age, cookie);
+            } else if (!previousUser.get().getNick().equals(name)) {
+                theGame.removeUserByCookie(cookie);
+                theGame.addUser(name, age, cookie);
+            }
+        } finally {
+            theGameLock.unlock();
         }
     }
 
     public String getConfig(String task, String cookie) throws NoSuchUserException {
         JSONObject config = new JSONObject();
-        for (Game game : games) {
-            Optional<User> user = game.getUserByCookie(cookie);
+
+        theGameLock.lock();
+        try {
+            Optional<User> user = theGame.getUserByCookie(cookie);
             if (user.isPresent()) {
-                config.put("group", game.getId());
+                config.put("group", theGame.getId());
                 config.put("nick", user.get().getNick());
                 config.put("age", user.get().getAge());
-                try {
-                    config.put("config", game.getTasksConfig().stream().filter(t -> t.getName().equals(task)).findFirst().get().getConfig());
-                } catch (Exception e) {
-                    log.info("there is no config for " + task);
-                    config.put("config", new ArrayList<>());
-                }
+                config.put(
+                        "config",
+                        theGame.getTasksConfig()
+                                .stream()
+                                .filter(t -> t.getName().equals(task))
+                                .findFirst()
+                                .map(TaskConfig::getConfig)
+                                .orElse(new ArrayList<>())
+                );
                 return config.toString();
             }
+        } finally {
+            theGameLock.unlock();
         }
+
         throw new NoSuchUserException("Nie ma użytkownika z ciastaczkiem = " + cookie);
     }
 
     public String getRandomTask(String cookie) throws NoMoreAvailableTasksException, NoSuchUserException {
-        Optional<Game> gameOptional = games.stream().filter(g -> g.getUserByCookie(cookie).isPresent()).findFirst();
-        if (!gameOptional.isPresent()) {
-            throw new NoSuchUserException("Nie ma użytkownika z ciasteczkiem = " + cookie);
-        }
+        theGameLock.lock();
+        try {
+            Optional<User> userOptional = theGame.getUserByCookie(cookie);
+            if (!userOptional.isPresent()) {
+                throw new NoSuchUserException("Nie ma użytkownika z ciasteczkiem = " + cookie);
+            }
 
-        Game game = gameOptional.get();
-        Optional<User> userOptional = game.getUserByCookie(cookie);
-        if (!userOptional.isPresent()) {
-            throw new NoSuchUserException("Nie ma użytkownika z ciasteczkiem = " + cookie);
-        }
-
-        return userService.getTaskNameIfAvailable(userOptional.get());
-    }
-
-    public void removeGame(String groupId, String cookie) throws CannotRemoveGameException {
-        Optional<Game> game = games.stream().filter(g -> g.getId().equals(groupId) && g.getCreatorCookie().equals(cookie)).findAny();
-        if (game.isPresent() && game.get().getCreatorCookie().equals(cookie)) {
-            games.remove(game.get());
-        } else {
-            throw new CannotRemoveGameException("Nie można usunąć gry o id = " + groupId);
+            return userService.getTaskNameIfAvailable(userOptional.get());
+        } finally {
+            theGameLock.unlock();
         }
     }
 
-    public void addResult(String taskName, String cookie, String nick, String group, double result) throws NoSuchGameException, NoSuchUserException {
-        Optional<Game> game = games.stream().filter(g -> g.getId().equals(group)).findFirst();
-        if (!game.isPresent()) {
-            throw new NoSuchGameException("Nie ma gry o id = " + group);
-        }
+    public void addResult(String taskName, String cookie, String nick, double result) throws NoSuchUserException {
+        theGameLock.lock();
+        try {
+            Optional<User> user = theGame.getUserList().stream().filter(u -> u.getNick().equals(nick) && u.getCookieValue().equals(cookie)).findFirst();
+            if (!user.isPresent()) {
+                throw new NoSuchUserException("Nie ma użytkownika = " + user + ", z ciasteczkiem = " + cookie);
+            }
 
-        Optional<User> user = game.get().getUserList().stream().filter(u -> u.getNick().equals(nick) && u.getCookieValue().equals(cookie)).findFirst();
-        if (!user.isPresent()) {
-            throw new NoSuchUserException("Nie ma użytkownika = " + user + ", z ciasteczkiem = " + cookie);
+            user.get().addUserResult(result, taskName);
+        } finally {
+            theGameLock.unlock();
         }
-
-        user.get().addUserResult(result, taskName);
     }
 
-    public Map<String, Double> getResults(String groupId, String cookie) throws NoSuchGameException, AccessDeniedException {
-        Optional<Game> gameOptional = games.stream().filter(g -> g.getId().equals(groupId)).findAny();
-        if (!gameOptional.isPresent())
-            throw new NoSuchGameException("Nie ma gry z id = " + groupId);
-        Game game = gameOptional.get();
-        if (!game.getCreatorCookie().equals(cookie))
-            throw new AccessDeniedException("Nie można pobrać wyników ze względu na niewłaściwe ciasteczko");
-
-        return game.getUserList().stream().collect(Collectors.groupingBy(User::getNick, Collectors.summingDouble(User::getScore)));
-    }
-
-    public String generateRandomGroupId() {
-        RandomStringGenerator randomStringGenerator = new RandomStringGenerator.Builder()
-                .withinRange('0', 'z')
-                .filteredBy(CharacterPredicates.ASCII_UPPERCASE_LETTERS)
-                .build();
-        String groupId;
-        while (containsGroupId(groupId = randomStringGenerator.generate(10))) {
+    public Map<String, Double> getResults() {
+        theGameLock.lock();
+        try {
+            return theGame.getUserList()
+                    .stream()
+                    .collect(groupingBy(User::getNick, summingDouble(User::getScore)));
+        } finally {
+            theGameLock.unlock();
         }
-
-        return groupId;
     }
 
     public LastResultResponse getLastResults(String cookie) {
-        Optional<Game> gameOptional = games.stream().filter(g -> g.getUserByCookie(cookie).isPresent()).findFirst();
-        if (gameOptional.isPresent()) {
-            Game game = gameOptional.get();
-            Optional<User> userOptional = game.getUserByCookie(cookie);
+        theGameLock.lock();
+        try {
+            Optional<User> userOptional = theGame.getUserByCookie(cookie);
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 LastResultResponse lastResultResponse = new LastResultResponse();
@@ -177,29 +169,14 @@ public class GameService {
                 lastResultResponse.setScore(user.getScore());
                 return lastResultResponse;
             }
-        }
 
-        return new LastResultResponse();
+            return new LastResultResponse();
+        } finally {
+            theGameLock.unlock();
+        }
     }
 
     public TaskConfig getTaskConfig(String taskName) {
         return mapTaskNameConfig.getOrDefault(taskName, new TaskConfig(taskName, new ArrayList<>()));
-    }
-
-   /* public void checkUserCurrentTask(String task, String cookie) throws WrongTaskException {
-        for (Game game : games) {
-            for (User user : game.getUserList()) {
-                if (user.getCookieValue().equals(cookie)) {
-                    if (!user.getCurrentTask().equals(task)) {
-                        throw new WrongTaskException("Zła gra: " + task);
-                    }
-                    return;
-                }
-            }
-        }
-    }*/
-
-    private boolean containsGroupId(String groupId) {
-        return games.stream().anyMatch(g -> g.getId().equals(groupId));
     }
 }
