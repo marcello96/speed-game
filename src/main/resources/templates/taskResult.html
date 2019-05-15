@@ -59,6 +59,7 @@
 
             <input th:type="radio" id="star1" th:field="*{mark}" name="rate" value="1" />
             <label for="star1" title="1 star">1 star</label>
+            <div th:if="${#fields.hasErrors('mark')}" th:errors="*{mark}"></div>
         </div>
 
         <input class="btn btn-primary" type="submit" value="Zacznij nowe zadanie" />

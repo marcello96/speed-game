@@ -36,19 +36,19 @@
     <table class="table-striped" style="width: 100%; font-size: 150%;">
         <thead>
         <tr>
-            <th> Game Name </th>
-            <th> Average Rating </th>
-            <th> Amount of Ratings </th>
+            <th> Nazwa gry </th>
+            <th> Średnia ocena </th>
+            <th> Ilość ocen </th>
         </tr>
         </thead>
         <tbody>
         <tr th:if="${ratings.empty}">
-            <td colspan="3"> No Ratings so far </td>
+            <td colspan="3">Brak ocen</td>
         </tr>
         <tr th:each="rating : ${ratings}">
-            <td><span th:text="${rating.name}"> Game Name </span></td>
-            <td><span th:text="${rating.averageMark}"> Average Rating </span></td>
-            <td><span th:text="${rating.amountOfMarks}"> Amount of Ratings </span></td>
+            <td><span th:text="${rating.name}"> Nazwa gry </span></td>
+            <td><span th:text="${rating.averageMark}"> Średnia ocena </span></td>
+            <td><span th:text="${rating.amountOfMarks}"> Ilość ocen </span></td>
         </tr>
         </tbody>
     </table>

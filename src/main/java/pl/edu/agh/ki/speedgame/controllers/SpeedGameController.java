@@ -2,8 +2,20 @@ package pl.edu.agh.ki.speedgame.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import pl.edu.agh.ki.speedgame.exceptions.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import pl.edu.agh.ki.speedgame.exceptions.NoMoreAvailableTasksException;
+import pl.edu.agh.ki.speedgame.exceptions.NoSuchGameException;
+import pl.edu.agh.ki.speedgame.exceptions.NoSuchUserException;
+import pl.edu.agh.ki.speedgame.exceptions.SuchUserExistException;
 import pl.edu.agh.ki.speedgame.model.Game;
 import pl.edu.agh.ki.speedgame.model.domain.TaskResult;
 import pl.edu.agh.ki.speedgame.model.requests.CreateGameInput;
@@ -14,6 +26,7 @@ import pl.edu.agh.ki.speedgame.services.FolderScanService;
 import pl.edu.agh.ki.speedgame.services.GameService;
 import pl.edu.agh.ki.speedgame.services.MarkService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,7 +109,11 @@ public class SpeedGameController {
     }
 
     @PostMapping(value = "/taskResult")
-    public String addMark(@ModelAttribute TaskMark taskMark) {
+    public String addMark(@ModelAttribute @Valid TaskMark taskMark, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "taskResult";
+        }
+
         markService.addMark(taskMark.getTaskName(), taskMark.getMark());
         return "redirect:/newtask";
     }
