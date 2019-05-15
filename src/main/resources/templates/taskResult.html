@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>InFUN</title>
+    <title>Speed game</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/input_view.css"/>
@@ -46,22 +46,23 @@
 
         <div class="rate">
             <input th:type="radio" id="star5" th:field="*{mark}" name="rate" value="5" />
-            <label for="star5" title="text">5 stars</label>
+            <label for="star5" title="5 stars">5 stars</label>
 
             <input th:type="radio" id="star4" th:field="*{mark}" name="rate" value="4" />
-            <label for="star4" title="text">4 stars</label>
+            <label for="star4" title="4 stars">4 stars</label>
 
             <input th:type="radio" id="star3" th:field="*{mark}" name="rate" value="3" />
-            <label for="star3" title="text">3 stars</label>
+            <label for="star3" title="3 stars">3 stars</label>
 
             <input th:type="radio" id="star2" th:field="*{mark}" name="rate" value="2" />
-            <label for="star2" title="text">2 stars</label>
+            <label for="star2" title="2 stars">2 stars</label>
 
             <input th:type="radio" id="star1" th:field="*{mark}" name="rate" value="1" />
-            <label for="star1" title="text">1 star</label>
+            <label for="star1" title="1 star">1 star</label>
+            <div th:if="${#fields.hasErrors('mark')}" th:errors="*{mark}"></div>
         </div>
 
-        <input class="btn btn-primary" type="submit" value="Zacznij nowe zadanie"/>
+        <input class="btn btn-primary" type="submit" value="Zacznij nowe zadanie" />
     </form>
 
 </div>

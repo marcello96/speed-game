@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class CreateGameInput {
-    public String groupId;
+    public String groupId = "123";
     public int taskNumber = 10;
     public List<TaskConfig> tasksConfig;
 

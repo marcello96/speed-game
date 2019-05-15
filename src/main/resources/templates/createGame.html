@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>InFUN</title>
+    <title>Speed game</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/input_view.css"/>
@@ -16,31 +16,28 @@
     </style>
 </head>
 <body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/joinGame}">Speed game</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/createGame}">Konfiguruj grę</a></li>
+                <li><a th:href="@{/ratings}">Oceny gier</a></li>
+                <li><a th:href="@{/manage}">Ranking</a></li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
 <div class="container data thumbnail">
     <div style="text-align: center;">
-        <h1>Stwórz grę</h1>
-        <hr/>
-        <h2>Wprowadź dane niezbędne do stworzenia nowej gry:</h2>
+        <h1>Konfiguracja gry</h1>
     </div>
 
     <form class="" action="#" th:action="@{/manage}" th:object="${createGameInput}" method="post">
-
-        <div class="form-group row">
-            <label for="inputGroupId" class="col-sm-2 col-form-label">ID grupy</label>
-            <div class="col-sm-10">
-                <input type="text" th:field="*{groupId}" class="form-control" id="inputGroupId"
-                       placeholder="ID grupy (jeśli puste, zostanie wylosowane)"/>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label for="taskNumber" class="col-sm-2 col-form-label">Ilość zadań</label>
-            <div class="col-sm-10">
-                <input type="number" th:field="*{taskNumber}" th:value=10 th:min=1 th:max=100 class="form-control"
-                       id="taskNumber"
-                       placeholder="Ilość zadań"/>
-            </div>
-        </div>
 
         <center>
             <div class="form-check">

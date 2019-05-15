@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>InFUN</title>
+    <title>Speed game</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/input_view.css"/>
@@ -14,25 +14,41 @@
     },5000)
 </script>
 <body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/joinGame}">Speed game</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/createGame}">Konfiguruj grę</a></li>
+                <li><a th:href="@{/ratings}">Oceny gier</a></li>
+                <li><a th:href="@{/manage}">Ranking</a></li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
 
 <div class="container data thumbnail">
 
     <table class="table-striped" style="width: 100%; font-size: 150%;">
         <thead>
         <tr>
-            <th> Game Name </th>
-            <th> Average Rating </th>
-            <th> Amount of Ratings </th>
+            <th> Nazwa gry </th>
+            <th> Średnia ocena </th>
+            <th> Ilość ocen </th>
         </tr>
         </thead>
         <tbody>
         <tr th:if="${ratings.empty}">
-            <td colspan="3"> No Ratings so far </td>
+            <td colspan="3">Brak ocen</td>
         </tr>
         <tr th:each="rating : ${ratings}">
-            <td><span th:text="${rating.name}"> Game Name </span></td>
-            <td><span th:text="${rating.averageMark}"> Average Rating </span></td>
-            <td><span th:text="${rating.amountOfMarks}"> Amount of Ratings </span></td>
+            <td><span th:text="${rating.name}"> Nazwa gry </span></td>
+            <td><span th:text="${rating.averageMark}"> Średnia ocena </span></td>
+            <td><span th:text="${rating.amountOfMarks}"> Ilość ocen </span></td>
         </tr>
         </tbody>
     </table>

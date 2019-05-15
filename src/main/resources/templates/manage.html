@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>InFUN</title>
+    <title>Speed game</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/input_view.css"/>
@@ -28,7 +28,7 @@
             return array;
         }
         function getData() {
-            var groupId = document.getElementById("groupID").innerHTML;
+            var groupId = '123';
             return getResults(groupId);
         }
         function createChart() {
@@ -80,14 +80,14 @@
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" th:href="@{/joinGame}">InFun</a>
+            <a class="navbar-brand" th:href="@{/joinGame}">Speed game</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a th:text="${group_id}"></a></li>
-                <li><a th:href="@{/createGame}">Stwórz nową grę</a></li>
-                <li><a id="link" th:href="@{/remove}">Usuń obecną grę</a></li>
+                <li><a th:href="@{/createGame}">Konfiguruj grę</a></li>
+                <li><a th:href="@{/ratings}">Oceny gier</a></li>
+                <li><a th:href="@{/manage}">Ranking</a></li>
             </ul>
         </div>
 
@@ -96,11 +96,5 @@
 
 <div class="chart" id="chartContainer" style="width: 100%; height: 88vh"></div>
 
-
-<p th:text="${group_id}" id="groupID" style="visibility:hidden"></p>
-
-<script>
-        document.getElementById("link").href = document.getElementById("groupID").innerHTML + "/remove";
-</script>
 </body>
 </html>
