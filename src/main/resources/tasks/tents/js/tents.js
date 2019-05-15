@@ -2381,14 +2381,14 @@ function _js_activate_timer() {
 
 function showGameResult(){
     // alert(timer_reference_date - preloadStartTime);
-    var modal = document.getElementById('myModal');
+    // var modal = document.getElementById('myModal');
     var ms = timer_reference_date - preloadStartTime;
     var min = Math.floor((ms/1000/60) << 0);
     var sec = Math.floor((ms/1000) % 60);
     document.getElementById('timeSummary').innerHTML= min+ "<b>	min </b>"+ sec + "<b> s</b>";
     // document.getElementById('timeSummary').innerHTML= min+ "<b>	min </b>"+ sec + "<b> s</b>";
     //console.log(min + ':' + sec);
-    modal.style.display = "block";
+    // modal.style.display = "block";
 
 }
 
