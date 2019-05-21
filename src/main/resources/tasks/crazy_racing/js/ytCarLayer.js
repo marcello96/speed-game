@@ -79,12 +79,31 @@ var ytCarLayer = (function () {
 
 	ytCarLayer.prototype.changeObstacleCarPosition = function () {
 		var s = this, rml = new Array();
+		// var config = {
+		// 	"age": 20
+		// }
+		var speedup = 0;
+
+		console.log("AGE: ", config['age'])
 
 		for (var k = 1, l = s.numChildren; k < l; k++) {
 			var o = s.getChildAt(k);
 
 			if (o) {
-				o.y += o.speed + 5; // change speed to make obstacles go at different pace -> 5 is very fast
+
+				if(config['age'] < 8) {
+					speedup = 0;
+				}
+
+				else if(config['age'] < 15) {
+					speedup = 7;
+				}		
+
+				else {
+					speedup = 11;
+				}		
+
+				o.y += o.speed + speedup; // change speed to make obstacles go at different pace -> 5 is very fast
 
 				if (Math.random() < 0.02) {
 					if (!o.changeDirTween) {
@@ -148,12 +167,17 @@ var ytCarLayer = (function () {
 
 	ytCarLayer.prototype.addObstacleCar = function () {
 		var s = this;
+		var config = {
+			"age": 12
+		}
+		var speedup = 0;
 
 		if (s.frameIndex++ > s.frameMaxIndex) {
 			var l = s.indexToBmpdPropertiesList["obstacle"],
 			index = Math.round(Math.random() * (l.length - 1)),
 			pi = Math.round(Math.random()),
-			speed = 15 + Math.floor(Math.random() * 3); // change to make hit quicker -> tougher game, 15 is challenging
+
+			speed = 8 + Math.floor(Math.random() * 3); // change to make hit quicker -> tougher game, 15 is challenging
 
 			s.addCar("obstacle", index, pi, speed);
 

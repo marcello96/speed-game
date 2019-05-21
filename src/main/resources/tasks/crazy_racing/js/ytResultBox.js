@@ -41,7 +41,7 @@ var ytResultBox = (function () {
 		pointTxt.y = titleTxt.getHeight() + 20;
 		s.txtLayer.addChild(pointTxt);
 
-		sendResult(point);
+		sendResult(1 - (point / 1000));
 	};
 
 	ytResultBox.EVENT_CLICK_BUTTON = "event_click_button";

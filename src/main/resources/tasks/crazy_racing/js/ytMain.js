@@ -25,9 +25,9 @@ function loadGame () {
 		[
 			{path : "./js/ytPreloader.js"},
 
-			{name : "preloader_bar", path : "./images/preloader_bar.jpg"},
-			{name : "preloader_bar_background", path : "./images/preloader_bar_background.jpg"},
-			{name : "preloader_background", path : "./images/preloader_background.jpg"}
+			{name : "preloader_bar", path : "./img/preloader_bar.jpg"},
+			{name : "preloader_bar_background", path : "./img/preloader_bar_background.jpg"},
+			{name : "preloader_background", path : "./img/preloader_background.jpg"}
 		],
 		[
 			{path : "./js/ytButton.js"},
@@ -44,21 +44,21 @@ function loadGame () {
 			{path : "./js/ytHelpLayer.js"},
 			{path : "./js/ytAboutLayer.js"},
 
-			{name : "button_sheet", path : "./images/button_sheet.jpg"},
-			{name : "menu_car_icons", path : "./images/menu_car_icons.png"},
-			{name : "explosion", path : "./images/explosion.png"},
-			{name : "cars_atlas", path : "./images/cars_atlas.png"},
-			{name : "button_pause_sheet", path : "./images/button_pause_sheet.png"},
-			{name : "default_menu_background", path : "./images/default_menu_background.jpg"},
-			{name : "misc_atlas", path : "./images/misc_atlas.png"},
-			{name : "numbers", path : "./images/numbers.png"},
-			{name : "street_canyon", path : "./images/street_canyon.jpg"},
-			{name : "street_city", path : "./images/street_city.jpg"},
-			{name : "street_desert", path : "./images/street_desert.jpg"},
-			{name : "street_grass", path : "./images/street_grass.jpg"},
-			{name : "street_snow", path : "./images/street_snow.jpg"},
-			{name : "street_water", path : "./images/street_water.jpg"},
-			{name : "help", path : "./images/help.jpg"}
+			{name : "button_sheet", path : "./img/button_sheet.jpg"},
+			{name : "menu_car_icons", path : "./img/menu_car_icons.png"},
+			{name : "explosion", path : "./img/explosion.png"},
+			{name : "cars_atlas", path : "./img/cars_atlas.png"},
+			{name : "button_pause_sheet", path : "./img/button_pause_sheet.png"},
+			{name : "default_menu_background", path : "./img/default_menu_background.jpg"},
+			{name : "misc_atlas", path : "./img/misc_atlas.png"},
+			{name : "numbers", path : "./img/numbers.png"},
+			{name : "street_canyon", path : "./img/street_canyon.jpg"},
+			{name : "street_city", path : "./img/street_city.jpg"},
+			{name : "street_desert", path : "./img/street_desert.jpg"},
+			{name : "street_grass", path : "./img/street_grass.jpg"},
+			{name : "street_snow", path : "./img/street_snow.jpg"},
+			{name : "street_water", path : "./img/street_water.jpg"},
+			{name : "help", path : "./img/help.jpg"}
 		]
 	];
 
