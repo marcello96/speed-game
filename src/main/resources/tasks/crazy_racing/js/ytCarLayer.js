@@ -79,12 +79,8 @@ var ytCarLayer = (function () {
 
 	ytCarLayer.prototype.changeObstacleCarPosition = function () {
 		var s = this, rml = new Array();
-		// var config = {
-		// 	"age": 20
-		// }
-		var speedup = 0;
 
-		console.log("AGE: ", config['age'])
+		var speedup = 0;
 
 		for (var k = 1, l = s.numChildren; k < l; k++) {
 			var o = s.getChildAt(k);
