@@ -19,15 +19,13 @@ public class User {
     private List<String> availableTasks;
     private int completedNumber;
     private String currentTask;
-    private int leftTasks;
 
-    public User(String nick, int age, String cookieValue, List<String> taskList, int leftTasks) {
+    public User(String nick, int age, String cookieValue, List<String> taskList) {
         this.nick = nick;
         this.age = age;
         this.cookieValue = cookieValue;
         this.availableTasks = taskList;
         this.lastResult = 0;
-        this.leftTasks = leftTasks;
     }
 
     public void addUserResult(double result, String task) {
@@ -35,9 +33,5 @@ public class User {
             log.info(RED + "Given result = " + result + " it's from wrong task = " + task + " but current task is = " + currentTask + RESET);
         this.score += result;
         this.lastResult = result;
-    }
-
-    public void decrementLeftTasks() {
-        --leftTasks;
     }
 }

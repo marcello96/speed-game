@@ -4,7 +4,7 @@ var dataList = {};
 
 function main () {
 	LGlobal.aspectRatio = PORTRAIT;
-	
+
 	LGlobal.setDebug(false);
 
 	var b = document.body;
@@ -123,4 +123,4 @@ function addHelpInterface() {
 function addAboutInterface() {
 	var aboutInterface = new ytAboutLayer();
 	addChild(aboutInterface);
-}
+} 

@@ -33,7 +33,7 @@ var ytResultBox = (function () {
 		titleTxt.size = 20;
 		titleTxt.x = (s.getWidth() - titleTxt.getWidth()) / 2;
 		s.txtLayer.addChild(titleTxt);
-		
+
 		var pointTxt = s.txtTemplate.clone();
 		pointTxt.size = 30;
 		pointTxt.text = point + " m";
@@ -79,4 +79,4 @@ var ytResultBox = (function () {
 	};
 
 	return ytResultBox;
-})();
+})(); 
