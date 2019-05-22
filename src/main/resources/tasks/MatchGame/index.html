@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MatchStick</title>
+    <link rel="stylesheet" type="text/css" href="css/matches.css">
+    <link rel="stylesheet" type="text/css" href="css/thegamestyle.css">
+    <link rel="stylesheet" type="text/css" href="css/popup.css">
+  </head>
+  <body>
+      <div class="topcenter">
+          <p id="timer" class="text">00:00:00</p>
+      </div>
+      <div class="top">
+        <div class="topleft" id="hint">
+<!--            <p class="text" id="hint"></p>-->
+        </div>
+        <div class="topright">
+            <img src="img/redo-alt-solid.svg"  id="ret" onclick="reloading();" class="retry-button">
+<!--            <button id="ret" onclick="reloading();" class="retry-button">Jeszcze raz</button>-->
+        </div>
+      </div>
+
+    <div id="divequation"></div>
+    <div class="bottom-center">
+<!--        <button id="ret" onclick="reloading();" class="retry-button">Retry</button>;-->
+    </div>
+
+  <!-- Modal -->
+    <div id="pass-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header"></div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="js/equations.js"></script>
+    <script src="js/thegamejs.js"></script>
+    <script src="js/popup.js"></script>
+    <script src="js/eq.js"></script>
+  </body>
+</html>
