@@ -26,6 +26,7 @@ let canvas,
 		shootTxt = { 'en-US': "to shoot", 'pl-PL': '- strzał' },
 		supportedLanguages = ['en-US', 'pl-PL'];
 
+let globalSpeed = 2;
 let max_generations = 5;
 
 Array.prototype.contains = function(obj) {
