@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import pl.edu.agh.ki.speedgame.exceptions.NoMoreAvailableTasksException;
 import pl.edu.agh.ki.speedgame.exceptions.NoSuchGameException;
 import pl.edu.agh.ki.speedgame.exceptions.NoSuchUserException;
 import pl.edu.agh.ki.speedgame.exceptions.SuchUserExistException;
@@ -77,11 +76,7 @@ public class SpeedGameController {
 
     @GetMapping("/tasks/new")
     public String getFile(@CookieValue(SESSION_COOKIE_NAME) String cookie) throws NoSuchUserException {
-        try {
-            return gameService.getRandomTask(cookie) + "/index";
-        } catch (NoMoreAvailableTasksException e) {
-            return "redirect:/end";
-        }
+        return gameService.getRandomTask(cookie) + "/index";
     }
 
     @RequestMapping("/manage")
