@@ -11,6 +11,7 @@ export default function DifficultyButton ({ difficulty }) {
     onclick: () => {
     getJSON("/hexahedral/config", afterConfigFetched);
     const difficulty_ = getDifficultyByAge();
+    console.log("jezus");
     startGame(STARTING_LEVEL_NUMBERS[difficulty_])
     },
   }, DIFFICULTY_LABELS[difficulty]);
