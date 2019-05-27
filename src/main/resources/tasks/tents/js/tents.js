@@ -98,6 +98,18 @@ var undo_button, redo_button;
 // for positioning the resize handle.
 var resizable_div;
 
+
+function displayHelpModal(){
+    var modal = document.getElementById('helpModal');
+    modal.style.display = "block";
+}
+
+
+function closeHelpModal() {
+    var modal = document.getElementById('helpModal');
+    modal.style.display = "none";
+}
+
 // Helper function to find the absolute position of a given DOM
 // element on a page, by iterating upwards through the DOM finding
 // each element's offset from its parent, and thus calculating the
@@ -2391,6 +2403,7 @@ function showGameResult(){
     // modal.style.display = "block";
 
 }
+
 
 function closeModal(){
     var modal = document.getElementById('myModal');
