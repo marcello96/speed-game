@@ -83,11 +83,10 @@ public class SpeedGameController {
     public String manage(@ModelAttribute("createGameInput") CreateGameInputConfig createGameInputConfig) {
         if (createGameInputConfig.getTasksConfig() != null && !createGameInputConfig.getTasksConfig().isEmpty()) {
             List<String> userChoice = createGameInputConfig.getTasksConfig();
-            gameService.addGame(new Game("123", userChoice.stream().map(gameService::getTaskConfig).collect(Collectors.toList())));
+            gameService.addGame(new Game(userChoice.stream().map(gameService::getTaskConfig).collect(Collectors.toList())));
         }
         return "manage";
     }
-
 
     @PostMapping(value = "/{task_name}/end")
     @ResponseBody
@@ -111,12 +110,6 @@ public class SpeedGameController {
 
         markService.addMark(taskMark.getTaskName(), taskMark.getMark());
         return "redirect:/newtask";
-    }
-
-    @GetMapping(value = "/end")
-    public String end(@CookieValue(SESSION_COOKIE_NAME) String cookie, Model model) {
-        model.addAttribute("result", "Udało Ci się skończyć wszystkie zadania. \nCałkowity rezultat = " + gameService.getLastResults(cookie).getScore());
-        return "end";
     }
 
     @GetMapping(value = "/ratings")

@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.edu.agh.ki.speedgame.exceptions.AccessDeniedException;
-import pl.edu.agh.ki.speedgame.exceptions.NoSuchGameException;
 import pl.edu.agh.ki.speedgame.exceptions.NoSuchUserException;
 import pl.edu.agh.ki.speedgame.model.requests.LastResultResponse;
 import pl.edu.agh.ki.speedgame.services.GameService;
@@ -28,9 +26,9 @@ public class GameRestController {
         return gameService.getConfig(taskName, cookie);
     }
 
-    @RequestMapping("/{group_id}/results")
+    @RequestMapping("/game/results")
     @ResponseBody
-    public Map<String, Double> getResults(@PathVariable(value = "group_id") final String groupId, @CookieValue("JSESSIONID") String cookie) throws NoSuchGameException, AccessDeniedException {
+    public Map<String, Double> getResults() {
         return gameService.getResults();
     }
 
