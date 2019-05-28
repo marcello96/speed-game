@@ -39,49 +39,59 @@ function getTowerCnt() {
 
 function postScoreJson(link, score) {
     var data = JSON.parse(window.name);
-
+    
     var xobj = new XMLHttpRequest();
     xobj.open('POST', link, true);
     xobj.overrideMimeType("application/json");
     xobj.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xobj.withCredentials = true;
-
+    
     xobj.onreadystatechange = function() {
         if (xobj.readyState === 4 && xobj.status === 200) {
             console.log(xobj.responseText);
             window.location = xobj.responseText
         }
     };
-
+    
     var sentPayload =
-        JSON.stringify(
-            {
-                group : data["group"],
-                nick : data["nick"],
-                age : data["age"],
-                result : score
-            }
-        );
+      JSON.stringify(
+        {
+            group : data["group"],
+            nick : data["nick"],
+            age : data["age"],
+            result : score
+        }
+      );
     console.log("Sending: " + sentPayload)
     xobj.send(sentPayload);
 }
 
+
 const buildingBase =
-    []
+  []
 const screen = window.screen;
 const {height, width} = screen;
-const scale = height > 500? 1:0.5;
+// const scale = height > 500? 1:0.5;
+var scale = 1;
+let W_max, W_min;
 
-W_max= 0.9*width;
-W_min= 0.3*width;
 
+var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+if (isMobile) {
+    scale =0.45;
+    W_max= 0.8*height;
+    W_min= 0.3*height;
+}else{
+    W_max= 0.9*width;
+    W_min= 0.3*width;
+}
 
 const enemiesNames = ['enemy', 'enemy1', 'enemy2']
 function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 var CMenu = cc.Sprite.extend({
-    defaultScale: 0.8,
+    defaultScale: 0.8*scale,
     hovered: false,
     boundingBox: null,
     onClickCallback: null,
@@ -98,9 +108,9 @@ var CMenu = cc.Sprite.extend({
     },
     handleTouchesMoved: function (touch, evt) {
         var point = touch[0].getLocation();
-
+        
         this.boundingBox || (this.boundingBox = this.getBoundingBox());
-
+        
         if (cc.Rect.CCRectContainsPoint(this.boundingBox, point)) {
             if (!this.hovered) {
                 this.hovered = true;
@@ -139,7 +149,7 @@ var GameLayer = cc.Layer.extend({
     slingRubber3: null,
     getTexture: function (name) {
         return cc.TextureCache.getInstance()
-            .addImage('img/' + name + '.png');
+          .addImage('img/' + name + '.png');
     },
     addRoof: function(x, level, withEnemy){
         var cube1Sprite = this.addObject({
@@ -193,11 +203,11 @@ var GameLayer = cc.Layer.extend({
             type: "dynamic",
             shape: "circle",
             density: 2,
-            userData: new BodyUserData(GameObjectRoll.Enemy, 100),
+            userData: new BodyUserData(GameObjectRoll.Enemy, 200),
             scale,
         });
     },
-
+    
     addDeck: function(x, level, withEnemy){
         var cube1Sprite = this.addObject({
             name: "wood1",
@@ -235,23 +245,23 @@ var GameLayer = cc.Layer.extend({
                 type: "dynamic",
                 shape: "circle",
                 density: 2,
-                userData: new BodyUserData(GameObjectRoll.Enemy, 400),
+                userData: new BodyUserData(GameObjectRoll.Enemy, 200),
                 scale,
             });
-
-
+            
+            
         }
     },
     addObject: function (desc) {
-
+        
         var sprite = cc.Sprite.createWithTexture(this.getTexture(desc.name));
-
+        
         sprite.setAnchorPoint(desc.anchor || cc.p(0.5, 0.5));
         sprite.setScaleX(desc.scaleX || desc.scale || 1);
         sprite.setScaleY(desc.scaleY || desc.scale || 1);
         sprite.setRotation(desc.rotation || 0);
         sprite.setPosition(cc.p(desc.x || 0, desc.y || 0));
-
+        
         desc.shape && b2.enablePhysicsFor({
             type: desc.type,
             shape: desc.shape,
@@ -260,76 +270,83 @@ var GameLayer = cc.Layer.extend({
             density: desc.density,
             userData: desc.userData
         });
-
+        
         this.addChild(sprite, desc.z || 0);
         return sprite;
     },
     addEnemy: function(enemy){
         this.addObject(enemy);
-
+        
         this.enemies.push(enemy.userData)
     },
     buildRandomDecked: function(){
         W = 150*scale;
-
+        
         let x = getRandomArbitrary(W_min, W_max);
         let a_x = x - W;
         let b_x = x + W;
         let it = 0;
         while(this.ranges.some(r => {
             a =r[0];
-        b =r[1];
-        return (a_x >= a &&  b_x <= b) || (a_x <= a &&  b_x >=a ) || (a_x <= b &&  b_x >=b )
-    }) && it < 100){
+            b =r[1];
+            return (a_x >= a &&  b_x <= b) || (a_x <= a &&  b_x >=a ) || (a_x <= b &&  b_x >=b )
+        }) && it < 100){
             x = getRandomArbitrary(W_min, W_max);
             a_x = x - W;
             b_x = x + W;
             it += 1;
         }
-
-        this.ranges.push([x-W,x+W]);
-        ranges = this.ranges;
-
-        let lmax = getRandomArbitrary(1,5);
-        for (let level = 0; level< lmax ; level++){
-            this.addDeck(x, level, getRandomArbitrary(0,100) < 75);
+        
+        if(it < 100){
+            this.ranges.push([x-W,x+W]);
+            ranges = this.ranges;
+            
+            let lmax = getRandomArbitrary(1,5);
+            for (let level = 0; level< lmax ; level++){
+                this.addDeck(x, level, getRandomArbitrary(0,100) < 75);
+            }
+            if(getRandomArbitrary(0,100) < 80){
+                this.addRoof(x, lmax);
+            }
         }
-        if(getRandomArbitrary(0,100) < 80){
-            this.addRoof(x, lmax);
-        }
-
-
-
+        
+        
+        
+        
     },buildRandomTower: function(){
         w = 80*scale;
-
+        
         let x = getRandomArbitrary(W_min, W_max);
         let a_x = x - w;
         let b_x = x + w;
+        let it = 0;
         while(this.ranges.some(r => {
             a =r[0];
-        b =r[1];
-        return (a_x > a &&  b_x < b) || (a_x < a &&  b_x >a ) || (a_x < b &&  b_x >b )
-    })){
+            b =r[1];
+            return (a_x > a &&  b_x < b) || (a_x < a &&  b_x >a ) || (a_x < b &&  b_x >b )
+        }) && it < 100){
             x = getRandomArbitrary(W_min, W_max);
             a_x = x - w;
             b_x = x + w;
         }
-
-        this.ranges.push([x-w,x+w]);
-        ranges = this.ranges;
-
-
-        let lmax = getRandomArbitrary(1,5);
-        for (let level = 0; level< lmax ; level++){
-            this.addDeckTower(x, level);
+        if(it<100){
+            this.ranges.push([x-w,x+w]);
+            ranges = this.ranges;
+            
+            
+            let lmax = getRandomArbitrary(1,5);
+            for (let level = 0; level< lmax ; level++){
+                this.addDeckTower(x, level);
+            }
+            if(getRandomArbitrary(0,100) < 80){
+                this.addEnemyTower(x, lmax);
+            }
         }
-        if(getRandomArbitrary(0,100) < 80){
-            this.addEnemyTower(x, lmax);
-        }
-
-
-
+        
+        
+        
+        
+        
     },
     init: function () {
         this._super();
@@ -339,21 +356,21 @@ var GameLayer = cc.Layer.extend({
         this.ranges =[];
         this.sent = false;
         birds = 1;
-
+        
         var director = cc.Director.getInstance(),
-            self = this,
-            winSize = director.getWinSize();
-
+          self = this,
+          winSize = director.getWinSize();
+        
         b2.initWorld();
-
+        
         var bgSprite = this.addObject({
             name: "bg",
             scale: 1.2*scale,
-
+            
             anchor: cc.p(0, 0),
             z: -1
         });
-
+        
         var groundSprite = this.addObject({
             name: "ground",
             scaleX: 2.5*scale,
@@ -371,7 +388,7 @@ var GameLayer = cc.Layer.extend({
             shape: "box",
             density: 0
         });
-
+        
         var sling1Sprite = this.addObject({
             name: "sling1",
             x: 284.5*scale,
@@ -393,10 +410,10 @@ var GameLayer = cc.Layer.extend({
             }else{
                 this.buildRandomTower();
             }
-
-
+            
+            
         }
-
+        
         this.birdSprite = this.addObject({
             name: "bird1",
             x: 200*scale,
@@ -404,7 +421,7 @@ var GameLayer = cc.Layer.extend({
             z: 1,
             scale,
         });
-
+        
         this.slingRubber1 = this.addObject({
             name: "sling3",
             x: 278*scale,
@@ -424,10 +441,10 @@ var GameLayer = cc.Layer.extend({
             z: 2
         });
         this.slingRubber3 = null;
-
+        
         // --------- Top Menu ! ---------
-
-
+        
+        
         // var refreshMenu = new CMenu(this.getTexture("menu_refresh"));
         // refreshMenu.setPosition(cc.p(70, winSize.height - margin));
         // refreshMenu.onClick(function () {
@@ -436,42 +453,42 @@ var GameLayer = cc.Layer.extend({
         // });
         // this.addChild(refreshMenu);
         // this.menus.push(refreshMenu);
-
+        
         // --------- My Score ! ---------
-
+        
         var scoreLabel = cc.LabelTTF.create("0", "fantasy", 20, cc.size(0, 0), cc.TEXT_ALIGNMENT_LEFT);
         scoreLabel.setPosition(cc.p(60, 180));
-
-
+        
+        
         scoreLabel.schedule(function () {
-
+            
             const score = self.getScore();
-
-
-
+            
+            
+            
             scoreLabel.setString("score: "+(score)
-                .toString());
-
+              .toString());
+            
         });
         var birdLabel = cc.LabelTTF.create("0", "fantasy", 20, cc.size(0, 0), cc.TEXT_ALIGNMENT_LEFT);
         birdLabel.setPosition(cc.p(60, 150));
         birdLabel.schedule(function () {
-
+            
             const used = self.birdsUsed + 1;
             const left = self.birdsMax;
-
-
+            
+            
             birdLabel.setString("birds: "+used.toString()+"/"+left.toString());
-
+            
         });
         this.addChild(scoreLabel, 5);
         this.addChild(birdLabel, 6);
-
+        
         // --------- Setup Sling's Bomb ! ---------
-
+        
         var action = cc.Spawn.create(cc.RotateBy.create(1.5, 360), cc.JumpTo.create(1.5, this.birdStartPos, 100, 1));
         this.birdSprite.runAction(action);
-
+        
         this.scheduleUpdate();
     },
     getScore: function(){
@@ -479,30 +496,33 @@ var GameLayer = cc.Layer.extend({
         const enemyDead = this.enemies.filter(e => e.isDead).length;
         const birdUsed = this.birdsUsed;
         const score = (enemyDead/(enemies*birdUsed))
-        return enemyDead == 0? 0: score;
+        return enemyDead === 0? 0: score;
     },
-
+    
     checkIfEnd: function(){
         return this.enemies.every(e => e.isDead) || this.birdsUsed +1 >= this.birdsMax;
     },
     update: function (dt) {
         b2.simulate();
-
+        
         if(this.checkIfEnd() && !this.sent){
             this.sent = true;
             const score = this.getScore();
-
+            
             setTimeout(function(s){postScoreJson(postScore_endpoint, s);
             }, 5000, score);
-
+            
             return;
         }
-
+        
         if (this.birdSprite.body) {
             var bData = this.birdSprite.body.GetUserData();
             if (!bData || bData.isContacted) {
-                if(this.birdsUsed + 1 < this.birdsMax){
+                if(!this.sent)
                     this.birdsUsed = this.birdsUsed +1;
+                if(this.birdsUsed < this.birdsMax){
+                    
+                    
                     this.birdSprite = this.addObject({
                         name: "bird"+(this.birdsUsed +1),
                         x: 200,
@@ -513,17 +533,19 @@ var GameLayer = cc.Layer.extend({
                     var action = cc.Spawn.create(cc.RotateBy.create(1.5, 360), cc.JumpTo.create(1.5, this.birdStartPos, 100, 1));
                     this.birdSprite.runAction(action);
                     return;
+                    
+                    
                 }
-
-
+                
+                
             }
-
-
+            
+            
             var birdPos = this.birdSprite.getPosition(),
-                vector = cc.pSub(birdPos, (this.lastSmoke && this.lastSmoke.getPosition()) || cc.p(0, 0)),
-                length = cc.pLength(vector);
-
-
+              vector = cc.pSub(birdPos, (this.lastSmoke && this.lastSmoke.getPosition()) || cc.p(0, 0)),
+              length = cc.pLength(vector);
+            
+            
             if (length >= this.smokeDistance) {
                 this.lastSmoke = this.addObject({
                     name: "smoke",
@@ -538,10 +560,10 @@ var GameLayer = cc.Layer.extend({
         this.menus.forEach(function (menu) {
             menu.handleTouches(touch, evt);
         });
-
+        
         var currPoint = touch[0].getLocation(),
-            vector = cc.pSub(this.birdStartPos, currPoint);
-
+          vector = cc.pSub(this.birdStartPos, currPoint);
+        
         if ((this.isDraggingSling = (cc.pLength(vector) < this.slingRadius.max)) && !this.birdSprite.body && !this.slingRubber3) {
             this.slingRubber3 = this.addObject({
                 name: "sling3",
@@ -558,40 +580,40 @@ var GameLayer = cc.Layer.extend({
         this.menus.forEach(function (menu) {
             menu.handleTouchesMoved(touch, evt);
         });
-
+        
         if (!this.isDraggingSling || this.birdSprite.body) return;
-
+        
         var currPoint = touch[0].getLocation(),
-            vector = cc.pSub(currPoint, this.birdStartPos),
-            radius = cc.pLength(vector),
-            angle = cc.pToAngle(vector);
-
+          vector = cc.pSub(currPoint, this.birdStartPos),
+          radius = cc.pLength(vector),
+          angle = cc.pToAngle(vector);
+        
         angle = angle < 0 ? (Math.PI * 2) + angle : angle;
         radius = MathH.clamp(radius, this.slingRadius.min, this.slingRadius.max);
         if (angle <= this.slingAngle.max && angle >= this.slingAngle.min) {
             radius = this.slingRadius.min;
         }
-
+        
         this.birdSprite.setPosition(cc.pAdd(this.birdStartPos, cc.p(radius * Math.cos(angle), radius * Math.sin(angle))));
-
+        
         var updateRubber = function (rubber, to, lengthAddon, topRubber) {
             var from = rubber.getPosition(),
-                rubberVec = cc.pSub(to, from),
-                rubberAng = cc.pToAngle(rubberVec),
-                rubberDeg = cc.RADIANS_TO_DEGREES(rubberAng),
-                length = cc.pLength(rubberVec) + (lengthAddon || 8);
-
+              rubberVec = cc.pSub(to, from),
+              rubberAng = cc.pToAngle(rubberVec),
+              rubberDeg = cc.RADIANS_TO_DEGREES(rubberAng),
+              length = cc.pLength(rubberVec) + (lengthAddon || 8);
+            
             rubber.setRotation(-rubberDeg);
             rubber.setScaleX(-(length / rubber.getContentSize()
-                .width));
-
+              .width));
+            
             if (topRubber) {
                 rubber.setScaleY(1.1 - ((0.7 / this.slingRadius.max) * length));
                 this.slingRubber3.setRotation(-rubberDeg);
                 this.slingRubber3.setPosition(cc.pAdd(from, cc.p((length) * Math.cos(rubberAng), (length) * Math.sin(rubberAng))));
             }
         }.bind(this);
-
+        
         var rubberToPos = this.birdSprite.getPosition();
         updateRubber(this.slingRubber2, rubberToPos, 13, true);
         updateRubber(this.slingRubber1, rubberToPos, 0);
@@ -601,12 +623,12 @@ var GameLayer = cc.Layer.extend({
         this.menus.forEach(function (menu) {
             menu.handleTouchesEnded(touch, evt);
         });
-
+        
         if (!this.birdSprite.body && this.isDraggingSling) {
             this.slingRubber1.setVisible(false);
             this.slingRubber2.setVisible(false);
             this.slingRubber3.setVisible(false);
-
+            
             b2.enablePhysicsFor({
                 type: "dynamic",
                 shape: "circle",
@@ -615,13 +637,13 @@ var GameLayer = cc.Layer.extend({
                 restitution: 0.4,
                 userData: new BodyUserData(GameObjectRoll.Bird, 250)
             });
-
+            
             var vector = cc.pSub(this.birdStartPos, this.birdSprite.getPosition()),
-                impulse = cc.pMult(vector, 12),
-                bPos = this.birdSprite.body.GetWorldCenter();
-
+              impulse = cc.pMult(vector, 12),
+              bPos = this.birdSprite.body.GetWorldCenter();
+            
             this.birdSprite.body.ApplyImpulse(impulse, bPos);
-
+            
             this.isDraggingSling = false;
         }
     },
@@ -635,10 +657,10 @@ var GameLayer = cc.Layer.extend({
 var GameScene = cc.Scene.extend({
     onEnter: function () {
         this._super();
-
+        
         var layer = new GameLayer();
         layer.init();
-
+        
         this.addChild(layer);
     }
 });
@@ -652,25 +674,25 @@ var cocos2dApp = cc.Application.extend({
         cc.COCOS2D_DEBUG = this.config['COCOS2D_DEBUG'];
         cc.setup(this.config['tag']);
         cc.Loader.getInstance()
-            .onloading = function () {
+          .onloading = function () {
             cc.LoaderScene.getInstance()
-                .draw();
+              .draw();
         };
         cc.Loader.getInstance()
-            .onload = function () {
+          .onload = function () {
             cc.AppController.shareAppController()
-                .didFinishLaunchingWithOptions();
+              .didFinishLaunchingWithOptions();
         };
-
+        
         cc.Loader.getInstance()
-            .preload(g_ressources);
+          .preload(g_ressources);
     },
     applicationDidFinishLaunching: function () {
         var director = cc.Director.getInstance();
         director.setDisplayStats(this.config['showFPS']);
         director.setAnimationInterval(1.0 / this.config['frameRate']);
         director.runWithScene(new this.startScene());
-
+        
         return true;
     }
 });
