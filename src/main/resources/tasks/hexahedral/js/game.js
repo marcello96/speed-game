@@ -7,7 +7,7 @@ import {
   winConditionsMet,
 } from './helpers';
 import { EASY, MEDIUM, HARD } from './difficulty-levels'
-import { log, playSoundEffect } from './util';
+import { log } from './util';
 import { START_GAME, LOAD_LEVEL, LOSE, MOVE, WIN } from './actions';
 import { LOSE_AUDIO, MOVE_AUDIO, WIN_AUDIO } from './audio';
 import { NEXT_LEVEL_DELAY } from './misc';
@@ -16,22 +16,27 @@ import { NEXT_LEVEL_DELAY } from './misc';
 export function startGame (levelNumber) {
 
   store.dispatch({ type: START_GAME });
-
+console.log("udalo sie ruszyc z miejscaasdasdasd");
   loadLevel(levelNumber);
 }
+
+
+export function afterConfigFetched(configJSON){
+    console.log("w trakcie response");
+  console.log("Got response: " + configJSON);
+  console.log("w trakcie response");
+  window.name = configJSON
+}
+
 
 export function getJSON(link, callback) {
    var xobj = new XMLHttpRequest();
    xobj.overrideMimeType("application/json");
    xobj.open('GET', link, false);
    xobj.send(null);
+   console.log("przed callbaku");
    callback(xobj.responseText);
-
-}
-
-export function afterConfigFetched(configJSON){
-  console.log("Got response: " + configJSON);
-  window.name = configJSON
+console.log("Po callbaku");
 }
 
 export function getDifficultyByAge() {
@@ -86,13 +91,6 @@ export function loadLevel (levelNumber) {
   store.dispatch({ type: LOAD_LEVEL, levelNumber });
 }
 
-// Moves the player up, down, left, or right.
-export function move (rowDelta, columnDelta) {
-  const { playerPosition } = store.getState();
-  const row = playerPosition.row + rowDelta;
-  const column = playerPosition.column + columnDelta;
-  moveTo(row, column);
-}
 
 // Moves the player to a specific location.
 export function moveTo (row, column) {
@@ -110,9 +108,18 @@ export function moveTo (row, column) {
   }
 
   store.dispatch({ type: MOVE, row, column });
-  playSoundEffect(MOVE_AUDIO);
   checkForWinOrLoss();
 }
+
+// Moves the player up, down, left, or right.
+export function move (rowDelta, columnDelta) {
+    console.log("udalo sie ruszyc z miejsca");
+  const { playerPosition } = store.getState();
+  const row = playerPosition.row + rowDelta;
+  const column = playerPosition.column + columnDelta;
+  moveTo(row, column);
+}
+
 
 // Resets the current level.
 export function reset () {
@@ -138,17 +145,17 @@ function loadNextLevelAfterDelay () {
   setTimeout(() => loadLevel(nextLevelNumber), NEXT_LEVEL_DELAY);
 }
 
-// Admonishes the player then restarts the current level.
-function lose () {
-  store.dispatch({ type: LOSE });
-  playSoundEffect(LOSE_AUDIO);
-  resetAfterDelay();
-}
-
 // Reloads the current level after a pause.
 function resetAfterDelay () {
   setTimeout(reset, NEXT_LEVEL_DELAY);
 }
+
+// Admonishes the player then restarts the current level.
+function lose () {
+  store.dispatch({ type: LOSE });
+  resetAfterDelay();
+}
+
 
 // Congratulates the player then move onto the next level.
 function win () {
@@ -177,7 +184,6 @@ function win () {
   const {numberOfTries} = store.getState();
 
   console.log('info', `Completed in ${numberOfTries} tries.`);
-  playSoundEffect(WIN_AUDIO);
   postScoreJson("/hexahedral/end", score);
 
   // loadNextLevelAfterDelay();

@@ -500,7 +500,7 @@ var GameLayer = cc.Layer.extend({
     },
     
     checkIfEnd: function(){
-        return this.enemies.every(e => e.isDead) || this.birdsUsed >= this.birdsMax;
+        return this.enemies.every(e => e.isDead) || this.birdsUsed +1 >= this.birdsMax;
     },
     update: function (dt) {
         b2.simulate();
@@ -700,15 +700,15 @@ var cocos2dApp = cc.Application.extend({
 
 (function() {
     var canvas = document.getElementById('viewport'),
-      context = canvas.getContext('2d');
-    
+        context = canvas.getContext('2d');
+
     // resize the canvas to fill browser window dynamically
     window.addEventListener('resize', resizeCanvas, false);
-    
+
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        
+
         /**
          * Your drawings need to be inside this function otherwise they will be reset when
          * you resize the browser window and the canvas goes will be cleared.
@@ -716,7 +716,7 @@ var cocos2dApp = cc.Application.extend({
         drawStuff();
     }
     resizeCanvas();
-    
+
     function drawStuff() {
         var myApp = new cocos2dApp(GameScene);
     }
