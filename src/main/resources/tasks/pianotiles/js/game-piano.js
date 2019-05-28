@@ -22,7 +22,8 @@ var genTileTimeout;
 var bottomLine = $("#lane0")[0].offsetHeight;
 
 $('.lane').on("click", function () {
-    gameOver();
+    if(!gameOverFlag)
+        gameOver();
 });
 
 function generateTiles() {

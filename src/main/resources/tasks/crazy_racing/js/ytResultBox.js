@@ -33,7 +33,7 @@ var ytResultBox = (function () {
 		titleTxt.size = 20;
 		titleTxt.x = (s.getWidth() - titleTxt.getWidth()) / 2;
 		s.txtLayer.addChild(titleTxt);
-		
+
 		var pointTxt = s.txtTemplate.clone();
 		pointTxt.size = 30;
 		pointTxt.text = point + " m";
@@ -41,7 +41,7 @@ var ytResultBox = (function () {
 		pointTxt.y = titleTxt.getHeight() + 20;
 		s.txtLayer.addChild(pointTxt);
 
-		sendResult(point);
+		sendResult(1 - (point / 1000));
 	};
 
 	ytResultBox.EVENT_CLICK_BUTTON = "event_click_button";
@@ -79,4 +79,4 @@ var ytResultBox = (function () {
 	};
 
 	return ytResultBox;
-})();
+})(); 

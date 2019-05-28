@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.StreamSupport;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -33,6 +34,7 @@ public class MarkService {
     public List<Mark> getAllMarks() {
         return StreamSupport.stream(markRepository.findAll().spliterator(), false)
                 .filter(mark -> mark.getAmountOfMarks() > 0)
+                .sorted(comparing(Mark::getAverageMark).reversed())
                 .collect(toList());
     }
 

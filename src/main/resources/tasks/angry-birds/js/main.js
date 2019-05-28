@@ -74,7 +74,8 @@ const scale = height > 500? 1:0.5;
 
 W_max= 0.9*width;
 W_min= 0.3*width;
-let birds = 1;
+
+
 const enemiesNames = ['enemy', 'enemy1', 'enemy2']
 function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
@@ -274,14 +275,16 @@ var GameLayer = cc.Layer.extend({
         let x = getRandomArbitrary(W_min, W_max);
         let a_x = x - W;
         let b_x = x + W;
+        let it = 0;
         while(this.ranges.some(r => {
             a =r[0];
         b =r[1];
         return (a_x >= a &&  b_x <= b) || (a_x <= a &&  b_x >=a ) || (a_x <= b &&  b_x >=b )
-    })){
+    }) && it < 100){
             x = getRandomArbitrary(W_min, W_max);
             a_x = x - W;
             b_x = x + W;
+            it += 1;
         }
 
         this.ranges.push([x-W,x+W]);
@@ -334,6 +337,7 @@ var GameLayer = cc.Layer.extend({
         this.setTouchEnabled(true);
         this.birdsUsed = 0;
         this.ranges =[];
+        this.sent = false;
         birds = 1;
 
         var director = cc.Director.getInstance(),
@@ -436,19 +440,32 @@ var GameLayer = cc.Layer.extend({
         // --------- My Score ! ---------
 
         var scoreLabel = cc.LabelTTF.create("0", "fantasy", 20, cc.size(0, 0), cc.TEXT_ALIGNMENT_LEFT);
-        scoreLabel.setPosition(cc.p(winSize.width - 80, winSize.height));
+        scoreLabel.setPosition(cc.p(60, 180));
+
+
         scoreLabel.schedule(function () {
-            var showingScore = parseInt(scoreLabel.getString());
-            if (showingScore < b2.getUserScore()) {
 
-                const score = b2.getUserScore();
+            const score = self.getScore();
 
 
-                scoreLabel.setString((score/birds)
-                    .toString());
-            }
+
+            scoreLabel.setString("score: "+(score)
+                .toString());
+
+        });
+        var birdLabel = cc.LabelTTF.create("0", "fantasy", 20, cc.size(0, 0), cc.TEXT_ALIGNMENT_LEFT);
+        birdLabel.setPosition(cc.p(60, 150));
+        birdLabel.schedule(function () {
+
+            const used = self.birdsUsed + 1;
+            const left = self.birdsMax;
+
+
+            birdLabel.setString("birds: "+used.toString()+"/"+left.toString());
+
         });
         this.addChild(scoreLabel, 5);
+        this.addChild(birdLabel, 6);
 
         // --------- Setup Sling's Bomb ! ---------
 
@@ -457,32 +474,47 @@ var GameLayer = cc.Layer.extend({
 
         this.scheduleUpdate();
     },
+    getScore: function(){
+        const enemies = this.enemies.length;
+        const enemyDead = this.enemies.filter(e => e.isDead).length;
+        const birdUsed = this.birdsUsed;
+        const score = (enemyDead/(enemies*birdUsed))
+        return enemyDead == 0? 0: score;
+    },
+
     checkIfEnd: function(){
-        return this.enemies.every(e => e.isDead) || this.birdsUsed >= this.birdsMax;
+        return this.enemies.every(e => e.isDead) || this.birdsUsed +1 >= this.birdsMax;
     },
     update: function (dt) {
         b2.simulate();
 
-        if(this.checkIfEnd()){
+        if(this.checkIfEnd() && !this.sent){
+            this.sent = true;
+            const score = this.getScore();
 
-            postScoreJson(postScore_endpoint, b2.getUserScore() )
+            setTimeout(function(s){postScoreJson(postScore_endpoint, s);
+            }, 5000, score);
+
             return;
         }
 
         if (this.birdSprite.body) {
             var bData = this.birdSprite.body.GetUserData();
             if (!bData || bData.isContacted) {
-                this.birdsUsed = this.birdsUsed +1;
-                this.birdSprite = this.addObject({
-                    name: "bird"+(this.birdsUsed +1),
-                    x: 200,
-                    y: 300,
-                    z: 1
-                });
-                birds = birds + 1;
-                var action = cc.Spawn.create(cc.RotateBy.create(1.5, 360), cc.JumpTo.create(1.5, this.birdStartPos, 100, 1));
-                this.birdSprite.runAction(action);
-                return;
+                if(this.birdsUsed + 1 < this.birdsMax){
+                    this.birdsUsed = this.birdsUsed +1;
+                    this.birdSprite = this.addObject({
+                        name: "bird"+(this.birdsUsed +1),
+                        x: 200,
+                        y: 300,
+                        z: 1
+                    });
+                    birds = birds + 1;
+                    var action = cc.Spawn.create(cc.RotateBy.create(1.5, 360), cc.JumpTo.create(1.5, this.birdStartPos, 100, 1));
+                    this.birdSprite.runAction(action);
+                    return;
+                }
+
 
             }
 
@@ -646,15 +678,15 @@ var cocos2dApp = cc.Application.extend({
 
 (function() {
     var canvas = document.getElementById('viewport'),
-      context = canvas.getContext('2d');
-    
+        context = canvas.getContext('2d');
+
     // resize the canvas to fill browser window dynamically
     window.addEventListener('resize', resizeCanvas, false);
-    
+
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        
+
         /**
          * Your drawings need to be inside this function otherwise they will be reset when
          * you resize the browser window and the canvas goes will be cleared.
@@ -662,7 +694,7 @@ var cocos2dApp = cc.Application.extend({
         drawStuff();
     }
     resizeCanvas();
-    
+
     function drawStuff() {
         var myApp = new cocos2dApp(GameScene);
     }

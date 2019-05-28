@@ -26,7 +26,8 @@ let canvas,
 		shootTxt = { 'en-US': "to shoot", 'pl-PL': '- strzał' },
 		supportedLanguages = ['en-US', 'pl-PL'];
 
-let max_generations = 5;
+let globalSpeed = 2;
+let max_generations = 3;
 
 Array.prototype.contains = function(obj) {
   let i = this.length;
@@ -69,7 +70,7 @@ function getJSON(link, callback) {
 }
 
 function maxGenerationsFromAge(age) {
-	return Math.floor(age / 4);
+	return Math.floor(age / 8);
 }
 
 function afterConfigFetched(_config){
@@ -226,7 +227,7 @@ function update(){
 	if(allDead) {
 		if(generation < max_generations) {
 			getBestOfGeneration();
-			if(generation % 5) {
+			if(generation % 3) {
 				invaders.evolve();
 			} else {
 				invaders.elitism();

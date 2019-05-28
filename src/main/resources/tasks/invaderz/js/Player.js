@@ -11,7 +11,8 @@ class Player {
 		this.y = y || 0;
 		this.xDir = 1;
 		this.shape = shape || [0,0,0,0,0,1,1,0,0,1,1,0,1,1,1,1];
-		this.speed = 0.12;
+		this.speed = 0.12 * globalSpeed;
+		this.bulletSpeed = 0.2 * globalSpeed;
 		this.isMovingLeft = false;
 		this.isMovingRight = false;
 		this.isShooting = false;
@@ -35,7 +36,7 @@ class Player {
 		}
 
 		if(this.isShooting){
-			this.bullet.y -= 0.2 * dt;
+			this.bullet.y -= this.bulletSpeed * dt;
 			if( this.bullet.y < 0 ){
 				this.isShooting = false;
 				this.bullet = {};

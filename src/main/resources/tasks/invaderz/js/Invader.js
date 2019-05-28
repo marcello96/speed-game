@@ -17,7 +17,7 @@ class Invader {
 		this.dim = 8;
     this.rectSize = 4;
 		this.i = 0;
-		this.speed = speed != undefined ? speed : 0.024;
+		this.speed = speed != undefined ? speed : 0.024 * globalSpeed;
 		this.frame = 0;
 		this.dir = ( Math.random () < 0.5 ? -1 : 1 );
 		this.maxFrame = Math.floor( Math.random() * 32 ) + 16;
