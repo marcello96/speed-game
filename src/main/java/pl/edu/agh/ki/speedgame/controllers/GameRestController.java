@@ -26,7 +26,7 @@ public class GameRestController {
         return gameService.getConfig(taskName, cookie);
     }
 
-    @RequestMapping("/results")
+    @RequestMapping("/game/results")
     @ResponseBody
     public Map<String, Double> getResults() {
         return gameService.getResults();
