@@ -1,4 +1,12 @@
-server.port: 8080
+server:
+  port: 8443
+  http:
+    port: 8080
+  ssl:
+    key-store-type: PKCS12
+    key-store: classpath:keystore/speedgame.p12
+    key-store-password: speedgame123
+    key-alias: speedgame
 
 spring:
   profiles:
