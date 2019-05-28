@@ -10,7 +10,7 @@
 		loadExtension:true,
 
         /* engineDir:'js/', */
-        appFiles: ['js/resources.js', 'js/b2.js', 'js/game.js', 'js/main.js']
+        appFiles: ['./angry-birds/js/resources.js', './angry-birds/js/b2.js', './angry-birds/js/main.js']
     };
     window.addEventListener('DOMContentLoaded', function () {
         var s = d.createElement('script');
