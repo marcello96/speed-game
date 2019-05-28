@@ -3,10 +3,37 @@
 <head>
 	<meta charset="utf-8">
 	<title>15 Puzzle</title>
+	<script>
+        var xhr = new XMLHttpRequest();
+        var config = {age: 20};
+        xhr.open('GET', '/15-puzzle/config', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                var json = xhr.responseText;
+                config = JSON.parse(json);
+            }
+        };
+        xhr.send(null);
+
+        function sendResult(score) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/15-puzzle/end', true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            //send result to server
+            xhr.send(JSON.stringify({result: score, group: config.group, nick: config.nick, age: config.age}));
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    window.location.replace(xhr.responseText);
+                }
+            }
+        }
+	</script>
+	<script type="text/javascript" src="js/15-puzzle/connector-15-puzzles.js"></script>
+	<script type="text/javascript" src="js/15-puzzle/15-puzzle.js"></script>
 	<meta name="viewport" content="width=device-width; initial-scale=1.0;">
 	<link rel="stylesheet" href="css/15-puzzle/15-puzzle.css">
 </head>
-<body>
+<body onLoad="start();">
 	<div id="controls">
 		<!--<button id="solve">Solve</button>-->
 		<!--<button id="scramble">Scramble</button>-->
@@ -25,8 +52,8 @@
 
 	</div>
 	<div id="puzzle"></div>
-	<script type="text/javascript" src="js/15-puzzle/connector-15-puzzles.js"></script>
-	<script src="js/15-puzzle/15-puzzle.js"></script>
+	<!--<script type="text/javascript" src="js/15-puzzle/connector-15-puzzles.js"></script>-->
+	<!--<script src="js/15-puzzle/15-puzzle.js"></script>-->
 	<script>
 			//main()
 	</script>

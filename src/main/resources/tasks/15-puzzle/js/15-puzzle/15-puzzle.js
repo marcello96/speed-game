@@ -4,12 +4,12 @@
  * Copyright (c) 2015 Arnis Ritins
  * Released under the MIT license
  */
-(function(){
+function start(){
 
-    var maxNumber = Math.pow(getGridSize(), 2) - 1
-    console.log("size: " + getGridSize())
-    console.log(("top number: " + Math.pow(getGridSize(), 2)-1))
-    var size = getGridSize()
+    var maxNumber = Math.pow(getGridSize(), 2) - 1;
+    console.log("size: " + getGridSize());
+    console.log(("top number: " + Math.pow(getGridSize(), 2)-1));
+    var size = getGridSize();
 	var state = 1;
     //var moves = 0;
     //var remaining = getRemainingMoves();
@@ -200,7 +200,8 @@
 			}
 		}
 
-		sendScoreAndReturnControl(1);
+		// sendScoreAndReturnControl(1);
+        sendResult(1);
 
 		// Puzzle is solved, offers to scramble it
 		if(confirm('Congrats, You did it! \nScramble the puzzle?')){
@@ -261,4 +262,4 @@
 
 	}
 
-}());
+}
