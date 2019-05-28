@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import pl.edu.agh.ki.speedgame.exceptions.NoMoreAvailableTasksException;
 import pl.edu.agh.ki.speedgame.exceptions.NoSuchUserException;
 import pl.edu.agh.ki.speedgame.exceptions.SuchUserExistException;
 import pl.edu.agh.ki.speedgame.model.Game;
@@ -19,10 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summingDouble;
@@ -50,9 +51,13 @@ public class GameService {
     @PostConstruct
     public void setUp() {
         theGameLock.lock();
+        Set<String> existingGamesNames = StreamSupport.stream(markRepository.findAll().spliterator(), false)
+                                                                    .map(Mark::getName)
+                                                                    .collect(Collectors.toSet());
         markRepository.saveAll(
                 folderScanService.getTaskNames()
                         .stream()
+                        .filter(name -> !existingGamesNames.contains(name))
                         .map(Mark::new)
                         .collect(Collectors.toList())
         );
@@ -124,7 +129,7 @@ public class GameService {
         throw new NoSuchUserException("Nie ma użytkownika z ciastaczkiem = " + cookie);
     }
 
-    public String getRandomTask(String cookie) throws NoMoreAvailableTasksException, NoSuchUserException {
+    public String getRandomTask(String cookie) throws NoSuchUserException {
         theGameLock.lock();
         try {
             Optional<User> userOptional = theGame.getUserByCookie(cookie);

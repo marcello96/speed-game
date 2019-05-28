@@ -61,6 +61,7 @@ var Lines = (function(){
 		score = 0;
 		blocked = false;
 		selected = null;
+		main();
         gridSize = getColorGridSize()
         forecastSize = getForecastSize()
 
@@ -449,11 +450,11 @@ var Lines = (function(){
 
         if(gridSize === 10 ) {
             if(score >= 70) {
-                sendScoreAndReturnControl(1)
+                sendScoreAndReturnControl(1);
             }
         } else {
             if(score >= 50) {
-                sendScoreAndReturnControl(1)
+                sendScoreAndReturnControl(1);
             }
         }
 
@@ -494,9 +495,7 @@ var Lines = (function(){
         }
 
 		// Shows score and offers to play again
-		if(confirm('Game over! Your score is '+score+'!\nPlay again?')){
-			init();
-		}
+
 
 	}
 
