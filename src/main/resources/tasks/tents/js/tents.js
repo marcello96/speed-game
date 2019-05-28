@@ -14,6 +14,16 @@
  * couple of other helper functions.
  */
 
+var global_width = 5;
+var global_height = 5;
+
+function changeSize(width, height){
+    document.getElementById("gametype").getElementsByTagName("li")[6].click();
+    document.getElementsByTagName("input")[0].value = width;
+    document.getElementsByTagName("input")[1].value = height;
+    document.getElementsByTagName("form")[0].getElementsByTagName("input")[2].click();
+}
+
 // To avoid flicker while doing complicated drawing, we use two
 // canvases, the same size. One is actually on the web page, and the
 // other is off-screen. We do all our drawing on the off-screen one
@@ -97,6 +107,18 @@ var undo_button, redo_button;
 // A div element enclosing both the puzzle and its status bar, used
 // for positioning the resize handle.
 var resizable_div;
+
+
+function displayHelpModal(){
+    var modal = document.getElementById('helpModal');
+    modal.style.display = "block";
+}
+
+
+function closeHelpModal() {
+    var modal = document.getElementById('helpModal');
+    modal.style.display = "none";
+}
 
 // Helper function to find the absolute position of a given DOM
 // element on a page, by iterating upwards through the DOM finding
@@ -199,16 +221,24 @@ function dialog_cleanup() {
 // Init function called from body.onload.
 function initPuzzle() {
     if (config['age'] < 8) {
-        gametypeselectedindex = 0;
+        global_width = 4;
+        global_height = 4;
+        // gametypeselectedindex = 0;
     }
     else if (config['age'] < 15) {
-        gametypeselectedindex = 1;
+        global_width = 5;
+        global_height = 5;
+        // gametypeselectedindex = 1;
     }
     else if (config['age'] < 20) {
-        gametypeselectedindex = 2;
+        global_width = 6;
+        global_height = 6;
+        // gametypeselectedindex = 2;
     }
     else {
-        gametypeselectedindex = 3;
+        global_width = 8;
+        global_height = 8;
+        // gametypeselectedindex = 3;
     }
 
 
@@ -393,8 +423,8 @@ function initPuzzle() {
         }
     };*/
 
-    //gametypelist = document.getElementById("gametype");
-    //gametypesubmenus.push(gametypelist);
+    gametypelist = document.getElementById("gametype");
+    gametypesubmenus.push(gametypelist);
 
     // In IE, the canvas doesn't automatically gain focus on a mouse
     // click, so make sure it does
@@ -519,9 +549,9 @@ function initPuzzle() {
     // show the div containing the actual puzzle.
     document.getElementById("apology").style.display = "none";
     document.getElementById("puzzle").style.display = "inline";
+    changeSize(global_width, global_height);
 
-
-    command(2);
+    //command(2);
 }
 
 // The Module object: Our interface to the outside world. We import
@@ -2004,24 +2034,24 @@ function _js_enable_undo_redo(undo, redo) {
 }
 
 function _js_add_preset(menuid, ptr, value) {
-    /*var name = Pointer_stringify(ptr);
-          var item = document.createElement("li");
-          item.setAttribute("data-index", value);
-          var tick = document.createElement("span");
-          tick.appendChild(document.createTextNode("\u2713"));
-          tick.style.color = "transparent";
-          tick.style.paddingRight = "0.5em";
-          item.appendChild(tick);
-          item.appendChild(document.createTextNode(name));
-          gametypesubmenus[menuid].appendChild(item);
-          gametypeitems.push(item);
+    var name = Pointer_stringify(ptr);
+    var item = document.createElement("li");
+    item.setAttribute("data-index", value);
+    var tick = document.createElement("span");
+    tick.appendChild(document.createTextNode("\u2713"));
+    tick.style.color = "transparent";
+    tick.style.paddingRight = "0.5em";
+    item.appendChild(tick);
+    item.appendChild(document.createTextNode(name));
+    gametypesubmenus[menuid].appendChild(item);
+    gametypeitems.push(item);
 
-          item.onclick = function(event) {
-              if (dlg_dimmer === null) {
-                  //gametypeselectedindex = value;
-                  command(2);
-              }
-          }*/
+    item.onclick = function(event) {
+        if (dlg_dimmer === null) {
+            gametypeselectedindex = value;
+            command(2);
+        }
+    }
 }
 
 function _js_canvas_copy_from_blitter(id, x, y, w, h) {
@@ -2392,6 +2422,7 @@ function showGameResult(){
 
 }
 
+
 function closeModal(){
     var modal = document.getElementById('myModal');
     modal.style.display = "none";
@@ -2419,16 +2450,16 @@ function _js_canvas_set_size(w, h) {
 }
 
 function _js_select_preset(n) {
-    //gametypeselectedindex = n;
-    /*for (var i in gametypeitems) {
-              var item = gametypeitems[i];
-              var tick = item.firstChild;
-              if (item.getAttribute("data-index") == n) {
-                  tick.style.color = "inherit";
-              } else {
-                  tick.style.color = "transparent";
-              }
-          }*/
+    gametypeselectedindex = n;
+    for (var i in gametypeitems) {
+        var item = gametypeitems[i];
+        var tick = item.firstChild;
+        if (item.getAttribute("data-index") == n) {
+            tick.style.color = "inherit";
+        } else {
+            tick.style.color = "transparent";
+        }
+    }
 }
 
 function _fmod(x, y) {
@@ -6268,23 +6299,23 @@ function _js_dialog_launch() {
 }
 
 function _js_add_preset_submenu(menuid, ptr, value) {
-    /*var name = Pointer_stringify(ptr);
-          var item = document.createElement("li");
-          // We still create a transparent tick element, even though it
-          // won't ever be selected, to make submenu titles line up
-          // nicely with their neighbours.
-          var tick = document.createElement("span");
-          tick.appendChild(document.createTextNode("\u2713"));
-          tick.style.color = "transparent";
-          tick.style.paddingRight = "0.5em";
-          item.appendChild(tick);
-          item.appendChild(document.createTextNode(name));
-          var submenu = document.createElement("ul");
-          item.appendChild(submenu);
-          gametypesubmenus[menuid].appendChild(item);
-          var toret = gametypesubmenus.length;
-          gametypesubmenus.push(submenu);
-          return toret;*/
+    var name = Pointer_stringify(ptr);
+    var item = document.createElement("li");
+    // We still create a transparent tick element, even though it
+    // won't ever be selected, to make submenu titles line up
+    // nicely with their neighbours.
+    var tick = document.createElement("span");
+    tick.appendChild(document.createTextNode("\u2713"));
+    tick.style.color = "transparent";
+    tick.style.paddingRight = "0.5em";
+    item.appendChild(tick);
+    item.appendChild(document.createTextNode(name));
+    var submenu = document.createElement("ul");
+    item.appendChild(submenu);
+    gametypesubmenus[menuid].appendChild(item);
+    var toret = gametypesubmenus.length;
+    gametypesubmenus.push(submenu);
+    return toret;
 }
 
 function _time(ptr) {
