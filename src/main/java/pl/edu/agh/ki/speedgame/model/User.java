@@ -3,8 +3,6 @@ package pl.edu.agh.ki.speedgame.model;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
-
 import static pl.edu.agh.ki.speedgame.utils.InFunUtils.RED;
 import static pl.edu.agh.ki.speedgame.utils.InFunUtils.RESET;
 
@@ -16,16 +14,15 @@ public class User {
     private String cookieValue;
     private double score;
     private double lastResult;
-    private List<String> availableTasks;
-    private int completedNumber;
     private String currentTask;
+    private Game game;
 
-    public User(String nick, int age, String cookieValue, List<String> taskList) {
+    public User(String nick, int age, String cookieValue, Game game) {
         this.nick = nick;
         this.age = age;
         this.cookieValue = cookieValue;
-        this.availableTasks = taskList;
         this.lastResult = 0;
+        this.game = game;
     }
 
     public void addUserResult(double result, String task) {

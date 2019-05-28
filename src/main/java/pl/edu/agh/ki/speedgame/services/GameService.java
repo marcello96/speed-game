@@ -61,10 +61,7 @@ public class GameService {
                         .map(Mark::new)
                         .collect(Collectors.toList())
         );
-        theGame = new Game(
-                "123",
-                getTasks(folderScanService.scanFolder())
-        );
+        theGame = new Game(getTasks(folderScanService.scanFolder()));
         theGameLock.unlock();
     }
 
@@ -108,7 +105,7 @@ public class GameService {
         try {
             Optional<User> user = theGame.getUserByCookie(cookie);
             if (user.isPresent()) {
-                config.put("group", theGame.getId());
+                config.put("group", Game.GAME_ID);
                 config.put("nick", user.get().getNick());
                 config.put("age", user.get().getAge());
                 config.put(

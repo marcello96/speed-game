@@ -17,17 +17,16 @@ import static java.util.stream.Collectors.toList;
 @Data
 @Slf4j
 public class Game {
-    private String id;
+    public static final String GAME_ID = "speedgame";
     private List<TaskConfig> tasksConfig;
     private List<String> tasks;
     private List<User> userList;
     private Gson gson;
     private Random random;
 
-    public Game(String id, List<TaskConfig> tasksConfig) {
+    public Game(List<TaskConfig> tasksConfig) {
         this.random = new Random();
         this.gson = new Gson();
-        this.id = id;
         this.userList = Collections.synchronizedList(new ArrayList<>());
         this.tasksConfig = Collections.synchronizedList(tasksConfig);
         this.tasks = Collections.synchronizedList(tasksConfig.stream().map(TaskConfig::getName).collect(toList()));
@@ -37,7 +36,7 @@ public class Game {
         if (userList.stream().anyMatch(u -> u.getNick().equals(name))) {
             throw new SuchUserExistException("Użytkownik = " + name + " już istnieje");
         }
-        userList.add(new User(name, age, cookie, new ArrayList<>(tasks)));
+        userList.add(new User(name, age, cookie, this));
     }
 
     public void removeUserByCookie(String cookie) {

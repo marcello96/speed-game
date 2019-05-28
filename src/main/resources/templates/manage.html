@@ -11,12 +11,12 @@
 
     <script>
         var chart;
-        function getResults(groupId) {
+        function getResults() {
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/' + groupId + '/results', false);
+            xhr.open('POST', '/results', false);
             xhr.send(null);
             <!--window.alert(xhr.responseText);-->
-            var input = JSON.parse(xhr.responseText)
+            var input = JSON.parse(xhr.responseText);
             var array = [];
             for (var name in input) {
                 item = {};
@@ -27,10 +27,7 @@
             <!--window.alert(array);-->
             return array;
         }
-        function getData() {
-            var groupId = '123';
-            return getResults(groupId);
-        }
+
         function createChart() {
             CanvasJS.addColorSet("greenShades",
                 [//colorSet Array
@@ -60,14 +57,14 @@
                     type: "bar",
                     name: "users",
                     axisYType: "secondary",
-                    dataPoints: getData()
+                    dataPoints: getResults()
                 }]
 
             });
             return chart;
         }
         window.setInterval(function(){
-            chart.options.data[0].dataPoints = getData();
+            chart.options.data[0].dataPoints = getResults();
             chart.render();
         }, 1000);
         window.onload = function() {
