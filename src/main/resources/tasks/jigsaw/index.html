@@ -55,12 +55,16 @@
             }
         }
         xhr.send(null);
+        var preloadStartTime = Date.now();
+
 
         function endFun() {
+            var timer_reference_date = Date.now();
+            var score =  -0.00000375 * (timer_reference_date - preloadStartTime) + 0.999775;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/jigsaw/end', true);
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.send(JSON.stringify({result: 1, group: vGroup, nick: vNick, age: vAge}));
+            xhr.send(JSON.stringify({result: score, group: vGroup, nick: vNick, age: vAge}));
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == XMLHttpRequest.DONE) {
                     //window.alert(xhr.responseText);

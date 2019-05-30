@@ -4,8 +4,11 @@
  * Copyright (c) 2015 Arnis Ritins
  * Released under the MIT license
  */
-function start(){
 
+var preloadStartTime = null;
+
+function start(){
+    preloadStartTime = Date.now();
     var maxNumber = Math.pow(getGridSize(), 2) - 1;
     console.log("size: " + getGridSize());
     console.log(("top number: " + Math.pow(getGridSize(), 2)-1));
@@ -199,14 +202,15 @@ function start(){
 				n++;
 			}
 		}
-
+		var timer_reference_date = Date.now();
 		// sendScoreAndReturnControl(1);
-        sendResult(1);
+        sendResult( -0.00000375 * (timer_reference_date - preloadStartTime) + 0.999775);
+        // sendResult(1);
 
 		// Puzzle is solved, offers to scramble it
-		if(confirm('Congrats, You did it! \nScramble the puzzle?')){
-			scramble();
-		}
+		// if(confirm('Congrats, You did it! \nScramble the puzzle?')){
+		// 	scramble();
+		// }
 	
 	}
 
