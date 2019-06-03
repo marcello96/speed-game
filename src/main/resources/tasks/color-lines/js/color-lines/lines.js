@@ -448,15 +448,6 @@ var Lines = (function(){
 
 		score += add;
 
-        if(gridSize === 10 ) {
-            if(score >= 70) {
-                sendScoreAndReturnControl(1);
-            }
-        } else {
-            if(score >= 50) {
-                sendScoreAndReturnControl(1);
-            }
-        }
 
 		// Checks if record is beaten
 		if(score > record){
@@ -481,17 +472,11 @@ var Lines = (function(){
 
 		//send information about game over to the server
         if(gridSize === 10 ) {
-            if(score >= 60) {
+            if (score >= 100)
                 sendScoreAndReturnControl(1)
-            } else {
-                sendScoreAndReturnControl(0)
-            }
-        } else {
-            if(score >= 40) {
-                sendScoreAndReturnControl(1)
-            } else {
-                sendScoreAndReturnControl(0)
-            }
+            else
+                sendScoreAndReturnControl(score/100)
+
         }
 
 		// Shows score and offers to play again
