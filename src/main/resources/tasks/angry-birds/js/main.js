@@ -7,6 +7,7 @@ var instructionText;
 getJSON(config_endpoint, afterConfigFetched);
 
 function getJSON(link, callback) {
+    window.name = JSON.stringify({age: 20})
     console.log("Sending request for config: " + link);
     var xobj = new XMLHttpRequest();
     xobj.overrideMimeType("application/json");
@@ -288,19 +289,19 @@ var GameLayer = cc.Layer.extend({
         let it = 0;
         while(this.ranges.some(r => {
             a =r[0];
-            b =r[1];
-            return (a_x >= a &&  b_x <= b) || (a_x <= a &&  b_x >=a ) || (a_x <= b &&  b_x >=b )
-        }) && it < 100){
+        b =r[1];
+        return (a_x >= a &&  b_x <= b) || (a_x <= a &&  b_x >=a ) || (a_x <= b &&  b_x >=b )
+    }) && it < 100){
             x = getRandomArbitrary(W_min, W_max);
             a_x = x - W;
             b_x = x + W;
             it += 1;
         }
-        
+
         if(it < 100){
             this.ranges.push([x-W,x+W]);
             ranges = this.ranges;
-            
+
             let lmax = getRandomArbitrary(1,5);
             for (let level = 0; level< lmax ; level++){
                 this.addDeck(x, level, getRandomArbitrary(0,100) < 75);
@@ -309,10 +310,10 @@ var GameLayer = cc.Layer.extend({
                 this.addRoof(x, lmax);
             }
         }
-        
-        
-        
-        
+
+
+
+
     },buildRandomTower: function(){
         w = 80*scale;
         
@@ -322,9 +323,9 @@ var GameLayer = cc.Layer.extend({
         let it = 0;
         while(this.ranges.some(r => {
             a =r[0];
-            b =r[1];
-            return (a_x > a &&  b_x < b) || (a_x < a &&  b_x >a ) || (a_x < b &&  b_x >b )
-        }) && it < 100){
+        b =r[1];
+        return (a_x > a &&  b_x < b) || (a_x < a &&  b_x >a ) || (a_x < b &&  b_x >b )
+    }) && it < 100){
             x = getRandomArbitrary(W_min, W_max);
             a_x = x - w;
             b_x = x + w;
@@ -332,8 +333,8 @@ var GameLayer = cc.Layer.extend({
         if(it<100){
             this.ranges.push([x-w,x+w]);
             ranges = this.ranges;
-            
-            
+
+
             let lmax = getRandomArbitrary(1,5);
             for (let level = 0; level< lmax ; level++){
                 this.addDeckTower(x, level);
@@ -342,11 +343,11 @@ var GameLayer = cc.Layer.extend({
                 this.addEnemyTower(x, lmax);
             }
         }
-        
-        
-        
-        
-        
+
+
+
+
+
     },
     init: function () {
         this._super();
@@ -458,32 +459,32 @@ var GameLayer = cc.Layer.extend({
         
         var scoreLabel = cc.LabelTTF.create("0", "fantasy", 20, cc.size(0, 0), cc.TEXT_ALIGNMENT_LEFT);
         scoreLabel.setPosition(cc.p(60, 180));
-        
-        
+
+
         scoreLabel.schedule(function () {
-            
+
             const score = self.getScore();
-            
-            
-            
+
+
+
             scoreLabel.setString("score: "+(score)
-              .toString());
-            
+                .toString());
+
         });
         var birdLabel = cc.LabelTTF.create("0", "fantasy", 20, cc.size(0, 0), cc.TEXT_ALIGNMENT_LEFT);
         birdLabel.setPosition(cc.p(60, 150));
         birdLabel.schedule(function () {
-            
+
             const used = self.birdsUsed + 1;
             const left = self.birdsMax;
-            
-            
-            birdLabel.setString("birds: "+used.toString()+"/"+left.toString());
-            
+
+
+            birdLabel.setString("birds: "+Math.min(used,3).toString()+"/"+left.toString());
+
         });
         this.addChild(scoreLabel, 5);
         this.addChild(birdLabel, 6);
-        
+
         // --------- Setup Sling's Bomb ! ---------
         
         var action = cc.Spawn.create(cc.RotateBy.create(1.5, 360), cc.JumpTo.create(1.5, this.birdStartPos, 100, 1));
@@ -498,20 +499,20 @@ var GameLayer = cc.Layer.extend({
         const score = (enemyDead/(enemies*birdUsed))
         return enemyDead === 0? 0: score;
     },
-    
+
     checkIfEnd: function(){
         return this.enemies.every(e => e.isDead) || this.birdsUsed +1 >= this.birdsMax;
     },
     update: function (dt) {
         b2.simulate();
-        
+
         if(this.checkIfEnd() && !this.sent){
             this.sent = true;
             const score = this.getScore();
-            
+
             setTimeout(function(s){postScoreJson(postScore_endpoint, s);
             }, 5000, score);
-            
+
             return;
         }
         
@@ -521,8 +522,8 @@ var GameLayer = cc.Layer.extend({
                 if(!this.sent)
                     this.birdsUsed = this.birdsUsed +1;
                 if(this.birdsUsed < this.birdsMax){
-                    
-                    
+
+
                     this.birdSprite = this.addObject({
                         name: "bird"+(this.birdsUsed +1),
                         x: 200,
@@ -533,11 +534,11 @@ var GameLayer = cc.Layer.extend({
                     var action = cc.Spawn.create(cc.RotateBy.create(1.5, 360), cc.JumpTo.create(1.5, this.birdStartPos, 100, 1));
                     this.birdSprite.runAction(action);
                     return;
-                    
-                    
+
+
                 }
-                
-                
+
+
             }
             
             
