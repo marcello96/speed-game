@@ -1,19 +1,17 @@
 const timerVar = setInterval(countTimer, 1000);
-let totalSeconds = -1;
+var totalSeconds = 60;
 
 function countTimer() {
-   ++totalSeconds;
-    const hour = Math.floor(totalSeconds / 3600);
-    const minute = Math.floor((totalSeconds - hour * 3600) / 60);
-    let seconds = totalSeconds - (hour * 3600 + minute * 60);
+   --totalSeconds;
+    let seconds = totalSeconds;
     if (seconds < 10) {
         seconds = '0' + seconds;
     }
-    document.getElementById("timer").innerHTML = '00:00' + ":" + seconds + ' s';
-    if (totalSeconds > 60) {
-        // next game
-        console.log('end game');
-		postScoreJson(postScore_endpoint, 0);
+    if (totalSeconds < 1) {
+        document.getElementById("timer").innerHTML = '00:00' + ":" + '60 s';
+        postScoreJson(postScore_endpoint, 0);
+    } else {
+        document.getElementById("timer").innerHTML = '00:00' + ":" + seconds + ' s';
     }
 }
     
