@@ -87,9 +87,10 @@ function Game(tileNames) {
     }, 1000);
   }
 }
-
+var startTime = 0;
 function coverAllCards(grid, $scope){
-  console.log("Covering all cards")
+  console.log("Covering all cards");
+  startTime = (new Date()).valueOf();
   for (var i = 0; i < grid.length; i++){
     for(var j = 0; j < grid[i].length; j++){
       grid[i][j].flip();
@@ -100,7 +101,21 @@ function coverAllCards(grid, $scope){
 
 function onCardRotationEnd (unmatchedPairs){
   if(unmatchedPairs == 0) {
-    sendScoreAndReturnControl(1)
+    var endTime = (new Date()).valueOf();
+    var difference = ((endTime - startTime) / 1000.0);
+    console.log(difference);
+    if(difference < 30) {
+        sendScoreAndReturnControl(1);
+    }
+    else{
+        var tmp = (difference - 30)/20;
+        var score = 1-tmp;
+        if(score <0 ) {
+          score = 0;
+        }
+        sendScoreAndReturnControl(score);
+    }
+
   }
 }
 
