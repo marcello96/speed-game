@@ -202,7 +202,7 @@ function endGame() {
 	c.font = "30px Arial";
 	c.fillText(scoreText, (w-c.measureText(scoreTxt).width) / 2, h / 2 + 40);
 	isEndGame = true;
-	postScoreJson(postScoreJson, score);
+	postScoreJson(postScore_endpoint, score);
 }
 
 function update(){
