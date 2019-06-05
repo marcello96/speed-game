@@ -13,7 +13,7 @@ public class UserService {
     }
 
     public String getTaskNameIfAvailable(User user) {
-        String currentTask = markService.getRandomGame(user.getAvailableTasks());
+        String currentTask = markService.getRandomGame(user.getGame().getTasks());
         user.setCurrentTask(currentTask);
         return currentTask;
     }

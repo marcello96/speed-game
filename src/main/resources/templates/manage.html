@@ -11,9 +11,9 @@
 
     <script>
         var chart;
-        function getResults(groupId) {
+        function getResults() {
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/' + groupId + '/results', false);
+            xhr.open('POST', '/game/results', false);
             xhr.send(null);
             <!--window.alert(xhr.responseText);-->
             var input = JSON.parse(xhr.responseText)
@@ -28,8 +28,7 @@
             return array;
         }
         function getData() {
-            var groupId = '123';
-            return getResults(groupId);
+            return getResults();
         }
         function createChart() {
             CanvasJS.addColorSet("greenShades",
