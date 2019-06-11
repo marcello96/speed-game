@@ -2431,6 +2431,7 @@ function showGameResult(){
         points = points + (((-0.00000375) * ms) + 0.999775);
     }
     modal.style.display = "block";
+
 }
 
 function closeModal(){

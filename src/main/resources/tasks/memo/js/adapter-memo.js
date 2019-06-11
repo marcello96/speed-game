@@ -26,6 +26,7 @@ function afterConfigFetched(configJSON){
 }
 
 function sendScoreAndReturnControl(score){
+
     var adapterData = JSON.parse(window.name); 
     postScoreJson(postScore_endpoint, score);
 }
